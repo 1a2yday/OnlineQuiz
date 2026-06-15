@@ -1,0 +1,26 @@
+{
+  "name": "📝 示例单选题库",
+  "questions": [
+    {
+      "type": "single-choice",
+      "question": "What is the capital of the United Kingdom?",
+      "options": ["Manchester", "London", "Liverpool", "Birmingham"],
+      "answer": 1,
+      "explanation": "英国的首都是伦敦（London）"
+    },
+    {
+      "type": "single-choice",
+      "question": "Which word means \"愉快的\" in English?",
+      "options": ["Sad", "Angry", "Happy", "Tired"],
+      "answer": 2,
+      "explanation": "Happy = 愉快的，开心的"
+    },
+    {
+      "type": "single-choice",
+      "question": "\"She ___ to school every day.\" Choose the correct form.",
+      "options": ["go", "goes", "going", "gone"],
+      "answer": 1,
+      "explanation": "主语 She 是第三人称单数，动词需用 goes"
+    }
+  ]
+}

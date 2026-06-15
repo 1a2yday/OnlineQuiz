@@ -1,0 +1,14 @@
+[
+  {
+    "id": "demo-single-choice",
+    "name": "📝 示例单选题库",
+    "file": "demo-single-choice.json",
+    "description": "包含基础语法单选题"
+  },
+  {
+    "id": "TEST",
+    "name": "TEST",
+    "file": "TEST.json",
+    "description": "test"
+  }
+]

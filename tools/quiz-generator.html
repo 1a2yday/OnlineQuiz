@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题库生成工具 — 英语刷题助手</title>
+<style>
+:root { --c-primary: #FF8C42; --c-bg: #FFF8F0; --c-text: #4A3030; --c-border: #FFE0D0; --c-card: #FFF; --c-accent: #2EC4A7; --c-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--c-bg); color:var(--c-text); line-height:1.6; }
+.container { max-width:860px; margin:0 auto; padding:20px; }
+h1 { font-size:1.8em; margin-bottom:4px; }
+.subtitle { color:#8B7070; margin-bottom:24px; font-size:0.95em; }
+.card { background:var(--c-card); border-radius:16px; padding:24px; margin-bottom:20px; box-shadow:var(--c-shadow); }
+.card h2 { font-size:1.2em; margin-bottom:8px; }
+label { display:block; font-weight:700; margin-bottom:4px; font-size:0.9em; }
+input[type="text"], textarea { width:100%; padding:10px 14px; border:2px solid var(--c-border); border-radius:10px; font-size:14px; font-family:'Consolas','Menlo',monospace; outline:none; transition:border-color .2s; }
+input[type="text"]:focus, textarea:focus { border-color:var(--c-primary); }
+textarea { min-height:200px; resize:vertical; font-size:13px; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:10px 22px; border-radius:12px; font-weight:700; font-size:15px; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary { background:var(--c-primary); color:#fff; } .btn-primary:hover { filter:brightness(1.1); }
+.btn-accent { background:var(--c-accent); color:#fff; } .btn-accent:hover { filter:brightness(1.1); }
+.btn-outline { background:#fff; color:var(--c-primary); border:2px solid var(--c-primary); } .btn-outline:hover { background:#FFF0E8; }
+.btn-sm { padding:6px 14px; font-size:13px; }
+.btn-danger { background:#E04060; color:#fff; } .btn-danger:hover { filter:brightness(1.1); }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.format-box { background:#F8F8F8; border-radius:8px; padding:14px 18px; font-size:13px; font-family:'Consolas','Menlo',monospace; margin-bottom:16px; white-space:pre-wrap; line-height:1.8; border:1px solid #E8E8E8; }
+.format-box b { color:var(--c-primary); }
+.preview-item { background:#FAFAFA; border-radius:10px; padding:10px 14px; margin-bottom:6px; font-size:13px; display:flex; justify-content:space-between; align-items:center; border:1px solid #EEE; }
+.type-tag { font-size:11px; padding:2px 8px; border-radius:20px; font-weight:700; }
+.type-single { background:#FFE0D0; color:#D06030; }
+.type-matching { background:#E0D0FF; color:#7040B0; }
+.type-sentence { background:#D0F0E8; color:#208060; }
+.bank-summary { background:#F8F8F8; border-radius:10px; padding:16px; margin-bottom:16px; }
+.bank-question { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #EEE; font-size:14px; }
+.bank-question:last-child { border-bottom:none; }
+.output-area { background:#1E1E2E; color:#CDD6F4; border-radius:12px; padding:16px; font-family:'Consolas','Menlo',monospace; font-size:12px; min-height:100px; max-height:400px; overflow:auto; white-space:pre-wrap; word-break:break-all; }
+.toast { position:fixed; top:20px; right:20px; background:var(--c-accent); color:#fff; padding:12px 20px; border-radius:10px; font-weight:700; z-index:999; animation:popIn .3s ease; }
+@keyframes popIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.note { font-size:12px; color:#8B7070; margin-top:8px; }
+.error-msg { color:#D04060; font-size:13px; margin-top:6px; }
+.success-msg { color:#2EC4A7; font-weight:700; margin-top:12px; }
+.stats { display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+.stat { background:#F8F8F8; border-radius:8px; padding:8px 14px; font-size:13px; }
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h1>🍬 题库生成工具</h1>
+  <p class="subtitle">在 Excel 中按格式填写，复制粘贴或直接上传 Excel 文件，<b>A 列自动识别题型</b>（支持 Tab/逗号分隔）</p>
+
+  <!-- 题库元数据 -->
+  <div class="card">
+    <label>📚 题库名称</label>
+    <input type="text" id="bankName" placeholder="例如：三年级英语第一单元" style="font-family:inherit;">
+    <div style="display:flex; gap:16px; margin-top:12px;">
+      <div style="flex:1;">
+        <label>🆔 题库 ID（英文，用于文件名）</label>
+        <input type="text" id="quizId" placeholder="自动生成..." style="font-family:'Consolas',monospace;">
+      </div>
+      <div style="flex:1;">
+        <label>📝 描述（可选）</label>
+        <input type="text" id="quizDesc" placeholder="例如：基础语法练习题" style="font-family:inherit;">
+      </div>
+    </div>
+  </div>
+
+  <!-- 统一格式说明 -->
+  <div class="card">
+    <h2>📋 统一格式说明（A 列 = 题型标识）</h2>
+    <div class="format-box">
+<b>Excel 表格结构（无需表头行，从第一行数据开始）：</b>
+
+┌──────────┬──────────────────────────────────────────────────────────────────┐
+│  <b>A 列</b>   │  <b>B ~ G 列（按题型不同）</b>                                           │
+├──────────┼──────────────────────────────────────────────────────────────────┤
+│  <b>单选</b>    │ B:题目 C:选项A D:选项B E:选项C F:选项D G:答案(0-3) H:解析(可选)        │
+│  <b>消消乐</b>  │ B:说明 C:左词|.. D:右词|.. E:配对(可选，默认按顺序) F:解析(可选)         │
+│  <b>还原句子</b>│ B:中文提示 C:单词|.. D:正确顺序(可选，默认按单词顺序) E:解析(可选)    │
+└──────────┴──────────────────────────────────────────────────────────────────┘
+
+<b>📌 示例（含解析，可直接复制到 Excel 测试）：</b>
+单选,What is the capital of UK?,Manchester,London,Liverpool,Birmingham,1,英国的首都是伦敦，注意不要和曼彻斯特混淆
+单选,"Hello" means?,你好,再见,谢谢,对不起,0,Hello 是英语中最常用的问候语，意为"你好"
+单选,She ___ to school every day.,go,goes,going,gone,1,主语 She 是第三人称单数，动词需用 goes
+消消乐,请匹配水果,apple|banana|cherry|grape,苹果|香蕉|樱桃|葡萄,,水果词汇记忆（左右按顺序一一对应，无需填配对联）
+消消乐,请匹配动词过去式,eat|go|see|take,went|saw|ate|took,0-2|1-0|2-1|3-3,不规则动词过去式需要单独记忆
+还原句子,我喜欢在周末读书,I|like|reading|books|on|weekends,,英语语序：主语+谓语+宾语+状语（单词按正确顺序写即可，D列留空）
+还原句子,她每天喝咖啡,She|drinks|coffee|every|day,,第三人称单数 drink→drinks（单词按正确顺序写即可）</div>
+
+    <label>📋 从 Excel 复制数据粘贴到此处（A列=题型，B列起=题目内容）</label>
+    <textarea id="csv-input" placeholder="从 Excel 全选复制（Ctrl+A → Ctrl+C），粘贴到此处...&#10;或点击下方"上传 Excel"按钮直接导入 .xlsx 文件"></textarea>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="parseAll()">🔍 解析预览</button>
+      <button class="btn btn-accent" onclick="addAllToBank()">➕ 全部加入题库</button>
+      <button class="btn btn-outline btn-sm" onclick="loadFullSample()">📥 加载完整示例</button>
+      <label class="btn btn-outline btn-sm" style="cursor:pointer;margin:0;">
+        📁 上传 Excel
+        <input type="file" id="excel-upload" accept=".xlsx,.xls" style="display:none;" onchange="handleExcelUpload(event)">
+      </label>
+    </div>
+    <div id="parse-result"></div>
+  </div>
+
+  <!-- 题库总览 -->
+  <div class="card">
+    <h2>📦 当前题库：<span id="bank-name-display">未命名题库</span></h2>
+    <div class="bank-summary" id="bank-summary">
+      <p style="color:#8B7070;">题库为空，请在解析后点击"全部加入题库"</p>
+    </div>
+    <div class="actions">
+      <button class="btn btn-accent" onclick="exportJSON()">📤 下载 JSON 文件</button>
+      <button class="btn btn-outline" onclick="copyJSON()">📋 复制到剪贴板</button>
+      <button class="btn btn-danger btn-sm" onclick="clearBank()">🗑️ 清空题库</button>
+    </div>
+    <div class="output-area" id="json-output" style="margin-top:16px;">
+// JSON 输出将显示在这里
+    </div>
+
+    <!-- 部署到服务器指引 -->
+    <div id="deploy-guide" class="card" style="margin-top:16px; display:none;">
+      <h2>📡 部署到服务器（让所有用户可见）</h2>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="background:var(--c-primary); color:#fff; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;">1</span>
+          <span>点击上方「📤 下载 JSON 文件」，放入 <code style="background:#FFF0E8; padding:1px 6px; border-radius:4px;">public/quizzes/</code> 目录</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="background:var(--c-primary); color:#fff; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;">2</span>
+          <span style="flex:1;">将以下条目添加到 <code style="background:#FFF0E8; padding:1px 6px; border-radius:4px;">public/quizzes/manifest.json</code> 的 <code>[...]</code> 数组中（注意逗号）：</span>
+        </div>
+        <div class="output-area" id="manifest-snippet" style="margin-left:32px;"></div>
+        <div style="margin-left:32px;">
+          <button class="btn btn-accent btn-sm" onclick="copyManifestSnippet()">📋 复制 Manifest 条目</button>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="background:var(--c-primary); color:#fff; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;">3</span>
+          <span>运行 <code style="background:#FFF0E8; padding:1px 6px; border-radius:4px;">npm run build:local</code> 重新构建</span>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="background:var(--c-primary); color:#fff; border-radius:50%; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;">4</span>
+          <span>部署 <code style="background:#FFF0E8; padding:1px 6px; border-radius:4px;">dist/</code> 目录到服务器</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== 全局状态 ==========
+let bankQuestions = [];
+let lastParsed = [];
+
+// ========== CSV/TSV 解析（处理 Excel 引号包裹字段，自动检测分隔符）==========
+function parseCSVLine(line, delimiter) {
+  const result = []; let current = ''; let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
+      else inQuotes = !inQuotes;
+    } else if (ch === delimiter && !inQuotes) { result.push(current.trim()); current = ''; }
+    else current += ch;
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function detectDelimiter(firstLine) {
+  const tabs = (firstLine.match(/\t/g) || []).length;
+  const commas = (firstLine.match(/,/g) || []).length;
+  return tabs > commas ? '\t' : ',';
+}
+
+function parseCSV(text) {
+  // 统一换行符：\r\n → \n，\r → \n
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n').filter(l => l.trim() !== '');
+  if (lines.length === 0) return [];
+  // 自动检测分隔符
+  const delimiter = detectDelimiter(lines[0]);
+  return lines.map(l => parseCSVLine(l, delimiter));
+}
+
+// ========== 题型识别 ==========
+function detectType(colA) {
+  const t = colA.toLowerCase().replace(/\s/g, '');
+  if (t.includes('单选') || t === 'single' || t === 'single-choice' || t === 'choice') return 'single-choice';
+  if (t.includes('消消乐') || t.includes('匹配') || t === 'matching' || t === 'match') return 'matching';
+  if (t.includes('还原句子') || t.includes('排序') || t === 'sentence' || t === 'sentence-order' || t === 'order') return 'sentence-order';
+  return null;
+}
+
+// ========== ID 生成 ==========
+function genId(prefix) { return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+
+// ========== 统一解析 ==========
+function parseAll() {
+  const csv = document.getElementById('csv-input').value.trim();
+  if (!csv) { showToast('请先粘贴 CSV 数据'); return; }
+  const rows = parseCSV(csv);
+  const questions = [];
+  const errors = [];
+  const typeCount = {};
+
+  rows.forEach((row, i) => {
+    const lineNum = i + 1;
+    if (row.length < 2) { errors.push(`第${lineNum}行：数据为空`); return; }
+    const type = detectType(row[0]);
+    if (!type) { errors.push(`第${lineNum}行：无法识别题型「${row[0]}」——请使用：单选 / 消消乐 / 还原句子`); return; }
+
+    try {
+      if (type === 'single-choice') {
+        let question, options, answer, explanation;
+        // 智能处理：若列数 > 8，题目或解析中可能含逗号被误拆，用启发式合并
+        if (row.length > 8) {
+          // 从右向左扫描，找答案列（恰好是 0-3 的单数字）
+          let ansIdx = -1;
+          for (let j = row.length - 1; j >= 1; j--) {
+            if (/^[0-3]$/.test(row[j].trim()) && j >= 5) {
+              ansIdx = j; break;
+            }
+          }
+          if (ansIdx < 0) {
+            errors.push(`第${lineNum}行：无法定位答案列（期望0-3的数字），共${row.length}列`);
+            return;
+          }
+          options = [row[ansIdx-4], row[ansIdx-3], row[ansIdx-2], row[ansIdx-1]];
+          answer = parseInt(row[ansIdx]);
+          question = row.slice(1, ansIdx-4).join(', ');
+          const explParts = row.slice(ansIdx+1);
+          explanation = explParts.length > 0 ? explParts.join(', ').trim() : undefined;
+        } else {
+          if (row.length < 7) { errors.push(`第${lineNum}行：单选题需要至少7列（题型+题目+4选项+答案）`); return; }
+          answer = parseInt(row[6]);
+          if (isNaN(answer) || answer < 0 || answer > 3) { errors.push(`第${lineNum}行：答案索引无效「${row[6]}」`); return; }
+          question = row[1];
+          options = [row[2], row[3], row[4], row[5]];
+          explanation = (row.length >= 8 && row[7]) ? row[7] : undefined;
+        }
+        const q = { id: genId('q'), type: 'single-choice', question, options, answer };
+        if (explanation) q.explanation = explanation;
+        questions.push(q);
+        typeCount['single-choice'] = (typeCount['single-choice'] || 0) + 1;
+      } else if (type === 'matching') {
+        if (row.length < 4) { errors.push(`第${lineNum}行：消消乐需要至少4列（题型+说明+左词+右词）`); return; }
+        const left = row[2].split('|').map(s => s.trim());
+        const right = row[3].split('|').map(s => s.trim());
+        // E 列为空时自动按顺序一一配对
+        let pairs;
+        if (!row[4] || row[4].trim() === '') {
+          const len = Math.min(left.length, right.length);
+          pairs = Array.from({ length: len }, (_, i) => [i, i]);
+        } else {
+          const pairsRaw = row[4].split('|').map(s => s.trim());
+          pairs = [];
+          for (const p of pairsRaw) {
+            const parts = p.split('-');
+            if (parts.length !== 2 || isNaN(parseInt(parts[0])) || isNaN(parseInt(parts[1]))) {
+              errors.push(`第${lineNum}行：配对格式错误「${p}」`); continue;
+            }
+            pairs.push([parseInt(parts[0]), parseInt(parts[1])]);
+          }
+          if (pairs.length === 0) { errors.push(`第${lineNum}行：没有有效配对`); return; }
+        }
+        const q = { id: genId('q'), type: 'matching', question: row[1], left, right, pairs };
+        if (row.length >= 6 && row[5]) q.explanation = row[5];
+        questions.push(q);
+        typeCount['matching'] = (typeCount['matching'] || 0) + 1;
+      } else if (type === 'sentence-order') {
+        if (row.length < 3) { errors.push(`第${lineNum}行：还原句子需要至少3列（题型+提示+单词）`); return; }
+        const words = row[2].split('|').map(s => s.trim());
+        // D 列为空时自动按单词顺序生成答案索引
+        let answer;
+        if (!row[3] || row[3].trim() === '') {
+          answer = words.map((_, i) => i);
+        } else {
+          const answerRaw = row[3].split('|').map(s => s.trim());
+          answer = answerRaw.map(Number);
+          if (answer.some(isNaN)) { errors.push(`第${lineNum}行：顺序索引无效`); return; }
+        }
+        const q = { id: genId('q'), type: 'sentence-order', question: row[1], words, answer };
+        if (row.length >= 5 && row[4]) q.explanation = row[4];
+        questions.push(q);
+        typeCount['sentence-order'] = (typeCount['sentence-order'] || 0) + 1;
+      }
+    } catch (e) {
+      errors.push(`第${lineNum}行：解析异常 — ${e.message}`);
+    }
+  });
+
+  lastParsed = questions;
+
+  const resultDiv = document.getElementById('parse-result');
+  let html = '';
+  if (errors.length > 0) {
+    html += `<div class="error-msg">⚠️ 解析问题（${errors.length}个）：<br>${errors.map(e => '• ' + e).join('<br>')}</div>`;
+  }
+  if (questions.length > 0) {
+    const parts = [];
+    if (typeCount['single-choice']) parts.push(`${typeCount['single-choice']}道单选`);
+    if (typeCount['matching']) parts.push(`${typeCount['matching']}道消消乐`);
+    if (typeCount['sentence-order']) parts.push(`${typeCount['sentence-order']}道排序`);
+    html += `<div class="success-msg">✅ 成功解析 <b>${questions.length}</b> 道题（${parts.join('，')}）</div>`;
+    html += '<div style="margin-top:8px;">' + questions.map(q => `
+      <div class="preview-item">
+        <span>${getPreview(q.question, 40)} <span class="type-tag type-${q.type === 'single-choice' ? 'single' : q.type === 'matching' ? 'matching' : 'sentence'}">${getLabel(q.type)}</span></span>
+        <span style="color:#8B7070;font-size:12px;">${getExtra(q)}</span>
+      </div>
+    `).join('') + '</div>';
+  }
+  resultDiv.innerHTML = html;
+}
+
+function getPreview(text, max) { return (text || '').length > max ? text.slice(0, max) + '...' : text; }
+function getLabel(type) { return type === 'single-choice' ? '单选' : type === 'matching' ? '消消乐' : '排序'; }
+
+function getExtra(q) {
+  if (q.type === 'single-choice') return '答案:' + 'ABCD'[q.answer];
+  if (q.type === 'matching') return q.left.length + '×' + q.right.length;
+  return q.words.length + '词';
+}
+
+// ========== 全部加入题库 ==========
+function addAllToBank() {
+  if (lastParsed.length === 0) { showToast('请先解析题目'); return; }
+  const existing = new Set(bankQuestions.map(q => q.id));
+  const fresh = lastParsed.filter(q => !existing.has(q.id));
+  bankQuestions.push(...fresh);
+  updateBankDisplay();
+  showToast(`已加入 ${fresh.length} 道题` + (lastParsed.length - fresh.length > 0 ? `（跳过${lastParsed.length - fresh.length}道重复）` : ''));
+  lastParsed = [];
+  document.getElementById('csv-input').value = '';
+  document.getElementById('parse-result').innerHTML = '';
+}
+
+// ========== 题库显示 ==========
+function updateBankDisplay() {
+  const name = document.getElementById('bankName').value || '未命名题库';
+  document.getElementById('bank-name-display').textContent = name;
+  const summary = document.getElementById('bank-summary');
+
+  if (bankQuestions.length === 0) {
+    summary.innerHTML = '<p style="color:#8B7070;">题库为空，请在解析后点击"全部加入题库"</p>';
+    document.getElementById('json-output').textContent = '// JSON 输出将显示在这里';
+    return;
+  }
+
+  const tc = {};
+  bankQuestions.forEach(q => { tc[q.type] = (tc[q.type] || 0) + 1; });
+  const parts = [];
+  if (tc['single-choice']) parts.push(tc['single-choice'] + '道单选');
+  if (tc['matching']) parts.push(tc['matching'] + '道消消乐');
+  if (tc['sentence-order']) parts.push(tc['sentence-order'] + '道排序');
+
+  summary.innerHTML = `<div class="stats">
+    <div class="stat">📝 <b>共 ${bankQuestions.length} 道题</b></div>
+    ${parts.map(p => `<div class="stat">${p}</div>`).join('')}
+  </div>` + bankQuestions.map((q, i) => `
+    <div class="bank-question">
+      <span>${i+1}. ${getPreview(q.question,45)} <span class="type-tag type-${q.type==='single-choice'?'single':q.type==='matching'?'matching':'sentence'}">${getLabel(q.type)}</span></span>
+      <button class="btn btn-danger btn-sm" onclick="removeQuestion(${i})">✕</button>
+    </div>
+  `).join('');
+
+  document.getElementById('json-output').textContent = generateJSON();
+
+  // 显示部署指南并刷新 manifest 片段
+  const guide = document.getElementById('deploy-guide');
+  if (guide) { guide.style.display = 'block'; }
+  const snippet = document.getElementById('manifest-snippet');
+  if (snippet) { snippet.textContent = generateManifestSnippet(); }
+}
+
+function removeQuestion(index) { bankQuestions.splice(index,1); updateBankDisplay(); }
+
+// ========== 导出 ==========
+function generateJSON() {
+  const name = document.getElementById('bankName').value || '未命名题库';
+  return JSON.stringify({ name, questions: bankQuestions }, null, 2);
+}
+
+function getQuizId() {
+  const manual = document.getElementById('quizId').value.trim();
+  return manual || 'quiz_' + Date.now().toString(36);
+}
+
+function exportJSON() {
+  if (bankQuestions.length===0) { showToast('题库为空'); return; }
+  const blob = new Blob([generateJSON()], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = getQuizId() + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('JSON 文件已下载 → 放入 public/quizzes/');
+}
+
+function generateManifestSnippet() {
+  const id = getQuizId();
+  const name = document.getElementById('bankName').value.trim() || '未命名题库';
+  const desc = document.getElementById('quizDesc').value.trim() || '';
+  const entry = { id, name, file: id + '.json' };
+  if (desc) entry.description = desc;
+  return JSON.stringify(entry, null, 2);
+}
+
+function copyManifestSnippet() {
+  if (bankQuestions.length===0) { showToast('题库为空，请先添加题目'); return; }
+  const snippet = generateManifestSnippet();
+  navigator.clipboard.writeText(snippet)
+    .then(() => showToast('✅ Manifest 条目已复制！粘贴到 manifest.json 的 [...] 数组中'))
+    .catch(() => showToast('⚠️ 复制失败，请手动复制上方代码块'));
+}
+
+function copyJSON() {
+  if (bankQuestions.length===0) { showToast('题库为空'); return; }
+  navigator.clipboard.writeText(generateJSON()).then(()=>showToast('已复制到剪贴板！'));
+}
+
+function clearBank() {
+  if (confirm('确定清空当前题库吗？此操作不可撤销。')) { bankQuestions=[]; updateBankDisplay(); showToast('题库已清空'); }
+}
+
+// ========== 加载示例 ==========
+function loadFullSample() {
+  document.getElementById('csv-input').value = `单选,What is the capital of UK?,Manchester,London,Liverpool,Birmingham,1,英国的首都是伦敦（London），位于英格兰东南部
+单选,"Hello" means?,你好,再见,谢谢,对不起,0,Hello 是最常用的英语问候语，相当于中文的"你好"
+单选,She ___ to school every day.,go,goes,going,gone,1,主语 She 是第三人称单数，一般现在时动词需加 -es
+单选,What is the plural of "child"?,Childs,Childes,Children,Childrens,2,child 是不规则名词，复数形式为 children
+消消乐,请匹配水果英文与中文,apple|banana|cherry|grape,苹果|香蕉|樱桃|葡萄,,常见水果词汇（默认顺序配对，E列留空即可）
+消消乐,请匹配动词与过去式,eat|go|see|take,went|saw|ate|took,0-2|1-0|2-1|3-3,不规则动词过去式需单独记忆，无统一规律
+还原句子,我喜欢在周末读书,I|like|reading|books|on|weekends,,英语语序：主(I)+谓(like)+宾(reading books)+时间状语(on weekends)——D列留空即可
+还原句子,她每天早晨喝一杯咖啡,She|drinks|a|cup|of|coffee|every|morning,,时间状语 every morning 放在句末——D列留空即可`;
+  showToast('完整示例已加载，8道题（含解析）覆盖三种题型');
+}
+
+// ========== Excel 文件导入 ==========
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // 检查 xlsx 库是否加载
+  if (typeof XLSX === 'undefined') {
+    showToast('⚠️ xlsx 库加载失败，请检查网络连接后刷新页面');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      // 转为二维数组，header: 1 表示第一行作为数据而非表头
+      const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '', blankrows: false });
+
+      // 跳过可能的表头行（如果第一行A列不是可识别的题型）
+      let startRow = 0;
+      if (rows.length > 0 && rows[0].length > 0) {
+        const firstCell = String(rows[0][0] || '').trim();
+        const knownTypes = ['单选', '消消乐', '还原句子', 'single', 'matching', 'sentence', 'match', 'order', 'single-choice', 'sentence-order'];
+        if (!knownTypes.some(t => firstCell.includes(t))) {
+          startRow = 1; // 跳过表头行
+        }
+      }
+
+      // 转为 TSV 格式填入 textarea（用 \t 分隔）
+      const tsvLines = [];
+      for (let i = startRow; i < rows.length; i++) {
+        const row = rows[i];
+        // 跳过全空行
+        if (!row || row.every(cell => String(cell || '').trim() === '')) continue;
+        // 每个单元格转换为字符串，包含逗号或换行的用引号包裹
+        const cells = row.map(cell => {
+          const str = String(cell ?? '').trim();
+          if (str.includes('\t') || str.includes(',') || str.includes('\n') || str.includes('"')) {
+            return '"' + str.replace(/"/g, '""') + '"';
+          }
+          return str;
+        });
+        tsvLines.push(cells.join('\t'));
+      }
+
+      if (tsvLines.length === 0) {
+        showToast('⚠️ Excel 文件中没有找到有效数据');
+        return;
+      }
+
+      document.getElementById('csv-input').value = tsvLines.join('\n');
+      showToast(`✅ 已导入 ${tsvLines.length} 行数据，点击"解析预览"查看`);
+
+      // 自动触发解析预览
+      parseAll();
+    } catch (err) {
+      showToast('❌ Excel 解析失败：' + err.message);
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  // 重置 input 以便重复选择同一文件
+  event.target.value = '';
+}
+
+// ========== Toast ==========
+function showToast(msg) {
+  const toast = document.createElement('div'); toast.className='toast'; toast.textContent=msg;
+  document.body.appendChild(toast); setTimeout(()=>toast.remove(),2500);
+}
+
+// ========== 题库名监听 ==========
+document.getElementById('bankName').addEventListener('input', ()=>{
+  const name = document.getElementById('bankName').value || '未命名题库';
+  document.getElementById('bank-name-display').textContent = name;
+
+  // 自动生成 ID：取中文名的拼音首字母，或使用时间戳
+  const idInput = document.getElementById('quizId');
+  if (idInput && !idInput.dataset.manualEdit) {
+    const slug = name.replace(/[^\w一-鿿]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').toLowerCase().slice(0, 20);
+    idInput.value = slug || 'quiz_' + Date.now().toString(36);
+  }
+
+  if (bankQuestions.length > 0) {
+    document.getElementById('json-output').textContent = generateJSON();
+    const snippet = document.getElementById('manifest-snippet');
+    if (snippet) snippet.textContent = generateManifestSnippet();
+  }
+});
+
+// ID 手动编辑标记（用户手动修改后不再自动覆盖）
+document.getElementById('quizId').addEventListener('input', function() {
+  this.dataset.manualEdit = '1';
+  const snippet = document.getElementById('manifest-snippet');
+  if (snippet && bankQuestions.length > 0) snippet.textContent = generateManifestSnippet();
+});
+
+// 描述变更同步刷新 manifest
+document.getElementById('quizDesc').addEventListener('input', function() {
+  const snippet = document.getElementById('manifest-snippet');
+  if (snippet && bankQuestions.length > 0) snippet.textContent = generateManifestSnippet();
+});
+</script>
+</body>
+</html>
