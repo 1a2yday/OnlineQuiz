@@ -29,7 +29,8 @@
 │   ├── index.ts         # 客户端入口、SPA路由注册、主题初始化
 │   ├── types.ts         # 所有 TypeScript 类型定义
 │   ├── storage.ts       # localStorage 数据层封装
-│   ├── utils.ts         # 工具函数（ID生成、验证、敏感词、管理员）
+│   ├── utils.ts         # 工具函数（ID生成、验证、敏感词、管理员、XSS防护）
+│   ├── sound.ts         # Web Audio API 合成音效（选择题/配对/正确/错误/完成）
 │   ├── router.ts        # SPA Hash路由（支持浏览器前进/后退）
 │   ├── themes.ts        # 主题系统（4套糖果色方案 + CSS变量注入）
 │   ├── sampleQuiz.ts    # 示例题库数据
@@ -69,6 +70,35 @@
 - Tailwind 自定义 `candy-*` 色板映射到 CSS 变量（`text-candy-primary` 等）
 - 所有页面颜色均使用 CSS 变量，切换主题即时生效无需刷新
 
+### 音效系统
+
+`src/sound.ts` 使用 Web Audio API 纯代码合成音效，**零文件下载、零网络请求**。
+
+| 音效 | 函数 | 触发时机 | 合成方式 |
+|------|------|---------|---------|
+| 选择音 | `playSelect()` | 点击选项/单词 | 880Hz 正弦波，0.08s |
+| 配对音 | `playMatch()` | 消消乐配对成功 | 660→880Hz 三角波滑音 |
+| 正确音 | `playCorrect()` | 答案正确 | 523→659Hz 双音上行 |
+| 错误音 | `playWrong()` | 答案错误 | 200Hz 锯齿波，0.3s |
+| 全部配对 | `playAllMatched()` | 消消乐全部完成 | C→E→G 三音和弦 |
+
+- 所有 `play*()` 函数内置 `try-catch`，静默处理不支持的浏览器
+- AudioContext 按需创建，用户首次交互后激活（浏览器自动播放策略）
+
+### 粒子特效
+
+消消乐配对成功时触发 `spawnParticles(element)`：
+- 在被点击的右侧词汇位置生成 10 个彩色粒子
+- CSS 动画 `@keyframes particle-burst`：向外随机方向扩散 + 渐隐消失
+- 粒子使用 `position: fixed` + `z-index: 9999`，浮于所有元素之上
+- 颜色循环：粉、薄荷绿、暖橙、紫、黄
+
+### 换行支持（`\\n` → `<br>`）
+
+题干/解析中的 `\n` 通过 `nl2br()` 函数转换为 `<br>` 渲染：
+- JSON.parse 自动将字面 `\n` 转为真正换行符，`nl2br` 用 `/\n/g` 匹配即可
+- ⚠️ 注意：正则必须是 `/\n/g`（真正换行符），而非 `/\\n/g`（字面反斜杠n）
+
 ### 题型支持
 - `single-choice`: 单选题 - 点击选项后确认，正确绿色高亮，错误红色抖动
 - `matching`: 消消乐 - 点击左侧（英文）再点击右侧（中文）配对，**右侧每次随机打乱**，已匹配项防污染保护。全部配对成功后**自动判定结果**：有解析则显示解析 + 下一题按钮，无解析则 600ms 高亮后**自动进入下一题**（无需确认按钮）
@@ -90,13 +120,30 @@
 - 首次使用需取名（最多5中文/10英文，含敏感词过滤）
 - 每个用户唯一 ID，错题独立存储
 - 管理员通过密码验证（默认: admin123）
-- 管理员可拉黑用户、删除题库、修改横幅图、编辑欢迎文字
+
+### 安全机制
+
+**管理员认证**：
+- 密码使用 SHA-256 哈希存储（Web Crypto API `crypto.subtle.digest`），永不存明文
+- 验证通过 `verifyAdminPassword()` 异步对比哈希值
+- 默认密码 `admin123` 的哈希硬编码在 `src/utils.ts` 的 `DEFAULT_ADMIN_PASSWORD_HASH` 中
+- 管理员可在管理面板中修改密码（需验证旧密码），新密码哈希存入 localStorage
+- 密码修改后清除 `english_quiz_admins` 会话，要求重新验证
+
+**XSS 防护**：
+- `src/utils.ts` 提供 `escapeHtml()` 函数，转义 `` & < > " ' ` `` 五个关键 ASCII 字符
+- 所有用户输入（配置、姓名等）在渲染前经过 `escapeHtml()` 处理
+- `isValidUrl()` 校验 URL：仅允许 `http:` / `https:` 协议及相对路径，防止 `javascript:` 注入
+- 横幅图 `onerror` 回调隐藏失败的图片，避免空白占位
+
+**数据隔离**：
+- 管理面板的修改（横幅、欢迎文字）存储在 localStorage，仅当前浏览器可见
+- 部署后让所有用户看到自定义内容：编辑 `src/storage.ts` 修改默认值后重新构建
 
 ### 横幅与主页
 - 横幅图默认读取根目录 `banner.gif`，加载失败则显示渐变横幅
 - 欢迎标题/副标题可在管理面板中随时修改
-- ⚠️ 管理面板的修改存储在 localStorage，仅当前浏览器可见
-- **部署后让所有用户看到自定义内容**：编辑 `src/storage.ts` 修改默认值后重新构建
+- `getAppConfig()` 始终用默认值补全缺失字段，防止旧版不完整 localStorage 配置导致字段丢失
 
 ### 静态内容定制（修改后需重新 `npm run build:local`）
 | 想修改的内容 | 编辑文件 | 位置 |
@@ -104,7 +151,7 @@
 | 横幅图 | 替换根目录 `banner.gif` | 部署到 `dist/` 根目录 |
 | 欢迎标题/副标题 | `src/storage.ts` | 搜索 `welcomeTitle` / `welcomeSubtitle`，改默认值 |
 | 默认主题色 | `src/themes.ts` | 修改 `DEFAULT_THEME_ID` |
-| 管理员密码 | `src/storage.ts` | 搜索 `adminPassword`，改默认值 |
+| 管理员密码 | `src/utils.ts` | 搜索 `DEFAULT_ADMIN_PASSWORD_HASH`，替换为新密码的 SHA-256 哈希值 |
 | 应用标题 | `index.html` | `<title>` 标签 |
 
 ### 题库生成工具
@@ -132,38 +179,29 @@
 
 `public/quizzes/` 目录下的题库 JSON 文件会在应用启动时自动拉取，**所有用户可见**，无需手动导入。
 
-**目录结构**：
-```
-public/quizzes/
-├── manifest.json              # 题库清单（注册每个题库的文件名和显示名）
-├── grammar-basics.json        # 题库 JSON 文件
-└── ...
-```
+**当前题库**：
+| 文件 | 名称 | 题目数 |
+|------|------|--------|
+| `PHRASETEST.json` | B2U3-B3U4短语速测 | — |
+| `B2U3-B3U4GRAMMAR.json` | B2U3-B3U4语法速测 | 31 |
+| `demo-single-choice.json` | 示例题库 | — |
 
-**manifest.json 格式**：
-```json
-[
-  {
-    "id": "grammar-basics",
-    "name": "📝 语法基础题库",
-    "file": "grammar-basics.json",
-    "description": "基础语法练习题"
-  }
-]
-```
+**特性**：
+- 远程题库在题库列表中显示「📡 云端」标签，与本地导入题库区分
+- 远程题库不可删除（删除按钮隐藏）
+- 首次拉取后缓存到 localStorage（key: `english_quiz_remote_cache`），后续访问秒开
+- 网络不通时使用缓存，不影响答题
+- 应用启动时后台拉取，不阻塞页面渲染
+- 拉取完成后触发 `remote-quizzes-loaded` 自定义事件，通知当前页面刷新列表
+- 题库列表页提供 **🔄 刷新** 按钮：清除缓存 → 重新拉取 → 刷新列表，解决新题库不即时出现的问题
 
 **添加新题库步骤**：
 1. 用 `tools/quiz-generator.html` 生成题库 → 下载 JSON → 放入 `public/quizzes/`
 2. 在工具中点击「📋 复制 Manifest 条目」→ 粘贴到 `public/quizzes/manifest.json` 的 `[...]` 数组中
 3. 运行 `npm run build:local` 重新构建
-4. 部署 `dist/` 到服务器 → 所有用户刷新后可见（📡 云端标识）
+4. 部署 `dist/` 到服务器 → 用户点 **🔄 刷新** 即可看到新题库
 
-**特性**：
-- 远程题库在题库列表中显示「📡 云端」标签，与本地导入题库区分
-- 远程题库不可删除（删除按钮隐藏）
-- 首次拉取后缓存到 localStorage，后续访问秒开
-- 网络不通时使用缓存，不影响答题
-- 应用启动时后台拉取，不阻塞页面渲染
+> ⚠️ **JSON 文件编辑注意**：不要用 AI 编辑工具直接修改 JSON 文件——Windows 平台下工具可能将 ASCII 双引号 `"` (U+0022) 转为中文弯引号 `"` `"` (U+201C/U+201D)，破坏 JSON 语法。如需修复 JSON，用 Node 脚本或手动编辑原始文件。中文引号在 JSON 值内部请用 `「」` 代替 `""`。
 
 ---
 
