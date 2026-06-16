@@ -45,12 +45,12 @@
       "type": "single-choice",
       "question": "Many articles ______ us how the Internet has changed our lives have been written.",
       "options": [
-        "telling",
-        "to tell",
         "told",
+        "to tell",
+        "telling",
         "being told"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "现在分词短语作定语表主动动作：articles telling us... = articles that tell us..."
     },
     {
@@ -58,12 +58,12 @@
       "type": "single-choice",
       "question": "The puzzle is hard ______.",
       "options": [
-        "to solve",
-        "solving",
         "solved",
+        "solving",
+        "to solve",
         "to be solved"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "在英语中，当 「主语 + be + 形容词 + 不定式」 结构中的形容词表示 难易、轻重、好坏、舒适程度（如 hard, easy, difficult, heavy, nice, pleasant, comfortable, fit 等）时，不定式用主动形式表被动，这个谜题解决起来很困难。"
     },
     {
@@ -71,12 +71,12 @@
       "type": "single-choice",
       "question": "The United Kingdom ______ four countries: England, Scotland, Wales and Northern Ireland.",
       "options": [
-        "consists of",
-        "is consisted of",
         "is made of",
-        "makes up"
+        "makes up",
+        "is consisted of",
+        "consists of"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "consist of 无被动形式，主动表「由...组成」。"
     },
     {
@@ -97,12 +97,12 @@
       "type": "single-choice",
       "question": "__________ difficulties, he never loses heart",
       "options": [
-        "Facing",
-        "Faced",
         "To face",
+        "Faced",
+        "Facing",
         "Having faced"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation":"主语he和动词face为主动关系，因此用现在分词作状语表主动。面对困难时，他从不灰心。"
     },
     {
@@ -111,11 +111,11 @@
       "question": "If ______ properly, the medicine will work very well.",
       "options": [
         "using",
-        "used",
+        "use",
         "to use",
-        "use"
+        "used"
       ],
-      "answer": 1,
+      "answer": 3,
       "explanation": "连词+过去分词省略结构：If (it is) used properly...，如果被恰当使用的话"
     },
     {
@@ -135,12 +135,12 @@
       "type": "single-choice",
       "question": "We passed by a village, many buildings ___________ on top of big hills",
       "options": [
-        "sitting",
+        "sat",
         "to sit",
         "sit",
-        "sat"
+        "sitting"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "独立主格，主语+非谓语结构，building和sit应该是主动关系，因此用现在分词;我们路过一个村庄，很多建筑坐落在大山丘的顶部"
     },
     {
@@ -148,25 +148,12 @@
       "type": "single-choice",
       "question": "Imagine ______ the chance to sing on a world stage.",
       "options": [
-        "having",
-        "to have",
         "have",
+        "to have",
+        "having",
         "had"
       ],
-      "answer": 0,
-      "explanation": "imagine + doing 是固定用法，想象做某事"
-    },
-    {
-      "id": "q_mqgg67km_u08xb0",
-      "type": "single-choice",
-      "question": "Imagine ______ the chance to sing on a world stage.",
-      "options": [
-        "having",
-        "to have",
-        "have",
-        "had"
-      ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "imagine + doing 是固定用法，想象做某事"
     },
     {
@@ -187,12 +174,12 @@
       "type": "single-choice",
       "question": "The ______ moon is shining brightly in the sky.",
       "options": [
-        "shining",
+        "shine",
         "shone",
         "shiningly",
-        "shine"
+        "shining"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "现在分词作定语表主动：shining moon = moon that is shining。"
     },
     {
@@ -200,12 +187,12 @@
       "type": "single-choice",
       "question": "Of all the traditional festivals, the harvest festival is ______.",
       "options": [
-        "the most significant",
         "more significant",
+        "the most significant",
         "most significant",
         "more significant than any"
       ],
-      "answer": 0,
+      "answer": 1,
       "explanation": "of all... 最高级用法，需用 the most significant。在所有的传统节日里，丰收节是最重要的"
     },
     {
@@ -213,12 +200,12 @@
       "type": "single-choice",
       "question": "______ the heavy rain, they still went to the celebration.",
       "options": [
-        "In spite of",
-        "Although",
         "Instead of",
+        "Although",
+        "In spite of",
         "As a result of"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "让步状语 in spite of = despite，意为「尽管「，＋名词短语heavy rain，Altough只能加句子"
     },
     {
@@ -239,12 +226,12 @@
       "type": "single-choice",
       "question": "Having ______ over 50,000 babies, she became a legend.",
       "options": [
-        "delivered",
+        "been delivered",
         "to deliver",
         "delivering",
-        "been delivered"
+        "delivered"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "现在分词的完成式 having done 强调先于主句动作。"
     },
     {
@@ -265,12 +252,12 @@
       "type": "single-choice",
       "question": "______ a living, he started a small restaurant.",
       "options": [
-        "To earn",
-        "Earning",
         "Earn",
+        "Earning",
+        "To earn",
         "Earned"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "不定式作目的状语。为了谋生，他开了一个小餐厅"
     },
     {
@@ -304,12 +291,12 @@
       "type": "single-choice",
       "question": "The desire ______ the universe is shared by many people.",
       "options": [
-        "to explore",
-        "exploring",
         "explored",
+        "exploring",
+        "to explore",
         "explore"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "desire/hope/wish等多与未来相关的抽象名词 + to do 作定语表未发生动作。探索宇宙的渴望是很多人所共有的"
     },
     {
@@ -330,12 +317,12 @@
       "type": "single-choice",
       "question": "The astronauts trained very hard ______ into space.",
       "options": [
-        "to go",
+        "gone",
         "going",
         "went",
-        "gone"
+        "to go"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "不定式作目的状语。为了进入太空，宇航员们很努力地训练"
     },
     {
@@ -343,12 +330,12 @@
       "type": "single-choice",
       "question": "Remember ______ the door before you leave.",
       "options": [
-        "to lock",
         "locking",
+        "to lock",
         "locked",
         "lock"
       ],
-      "answer": 0,
+      "answer": 1,
       "explanation": "remember to do 记得要做；remember doing 记得做过。你离开之前记得要关门"
     },
     {
@@ -356,12 +343,12 @@
       "type": "single-choice",
       "question": "The space station ______ next year will be the largest ever.",
       "options": [
-        "to be launched",
-        "launching",
         "launched",
+        "launching",
+        "to be launched",
         "being launched"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "不定式作定语表将来，太空站是被发射，因此要用被动式：to be launched。明年(将要被发射的)太空站将会是有史以来最大的"
     },
     {
@@ -382,12 +369,12 @@
       "type": "single-choice",
       "question": "It's dangerous ______ the internet without any protection.",
       "options": [
-        "to use",
+        "use",
         "using",
         "used",
-        "use"
+        "to use"
       ],
-      "answer": 0,
+      "answer": 3,
       "explanation": "It's adj. + to do 结构，做某事是怎么样的。没有任何保护的情况下使用因特网是非常危险的"
     },
     {
@@ -395,12 +382,12 @@
       "type": "single-choice",
       "question": "He is likely ______ late because of the traffic.",
       "options": [
-        "to be",
-        "being",
         "be",
+        "being",
+        "to be",
         "been"
       ],
-      "answer": 0,
+      "answer": 2,
       "explanation": "be likely to do 是固定搭配。"
     }
   ]
