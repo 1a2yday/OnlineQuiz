@@ -1,0 +1,915 @@
+{
+  "name": "短语速测",
+  "questions": [
+    {
+      "id": "q_mqg4037o_prvktj",
+      "type": "matching",
+      "question": "不限顺序配对短语：①被困在...中②从...中受益③既然；由于 ④经历渡过",
+      "left": [
+        "be stuck",
+        "benefit",
+        "now",
+        "go"
+      ],
+      "right": [
+        "in",
+        "from",
+        "that",
+        "through"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_etun6r",
+      "type": "matching",
+      "question": "不限顺序配对短语：①可以使用/接触/进入②健康;状况良好③追踪记录④解释；占比...",
+      "left": [
+        "have",
+        "in",
+        "keep",
+        "account"
+      ],
+      "right": [
+        "access to",
+        "shape",
+        "track of",
+        "for"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_bvkahn",
+      "type": "matching",
+      "question": "不限顺序配对短语：①取笑②尤其;特别③熟悉④牢记",
+      "left": [
+        "make",
+        "in",
+        "be familiar",
+        "keep"
+      ],
+      "right": [
+        "fun of",
+        "particular",
+        "with",
+        "(...) in mind"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_emk65k",
+      "type": "matching",
+      "question": "不限顺序配对短语：①以防万一②把...连接到...③脱离④也；和；还",
+      "left": [
+        "in",
+        "join ...",
+        "break",
+        "as well"
+      ],
+      "right": [
+        "case",
+        "to...",
+        "away from",
+        "as"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_v0t2g0",
+      "type": "matching",
+      "question": "不限顺序配对短语：①被...包围②负责掌管③留意④属于",
+      "left": [
+        "be surrounded",
+        "in charge",
+        "keep your eyes",
+        "belong"
+      ],
+      "right": [
+        "by",
+        "of",
+        "open for",
+        "to"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_28zmxj",
+      "type": "matching",
+      "question": "不限顺序配对短语：①申请职位②渴望做某事③挤满④虚拟合唱团",
+      "left": [
+        "apply for",
+        "be eager",
+        "be crowded",
+        "virtual"
+      ],
+      "right": [
+        "a postion",
+        "to do sth",
+        "with",
+        "choir"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_dc4hq0",
+      "type": "matching",
+      "question": "不限顺序配对短语：①抓住机会做某事②从那时起③心痛④连锁反应",
+      "left": [
+        "take the opportunity",
+        "from then",
+        "heart",
+        "chain"
+      ],
+      "right": [
+        "to do sth",
+        "on",
+        "ache",
+        "reaction"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_p5eo1d",
+      "type": "matching",
+      "question": "不限顺序配对短语：①使某人能够做某事②把某物奖励给某人③爱上④能够",
+      "left": [
+        "enable sb",
+        "award sth",
+        "fall in",
+        "be capable"
+      ],
+      "right": [
+        "to do sth",
+        "to sb",
+        "love with",
+        "of..."
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_7mrst9",
+      "type": "matching",
+      "question": "不限顺序配对短语：①专注于②对...有影响③旨在做某事④试验；试演",
+      "left": [
+        "be absorbed",
+        "have an",
+        "aim",
+        "try"
+      ],
+      "right": [
+        "in",
+        "impact on",
+        "to do sth",
+        "out"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_wpywr8",
+      "type": "matching",
+      "question": "不限顺序配对短语：①有...天赋②除...之外③令我满意的是④各种各样的",
+      "left": [
+        "have a talent",
+        "in additon",
+        "to my",
+        "a variety"
+      ],
+      "right": [
+        "for",
+        "to",
+        "satisfaction",
+        "of"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_3bx7un",
+      "type": "matching",
+      "question": "不限顺序配对短语：①穿衣打扮②毕竟；终究③范围从...到...都包括④弄清楚",
+      "left": [
+        "dress (sb)",
+        "after",
+        "range from...",
+        "figure"
+      ],
+      "right": [
+        "up",
+        "all",
+        "to",
+        "out"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_zqrm3r",
+      "type": "matching",
+      "question": "不限顺序配对短语：①对某事感激②用...装饰③逐渐消失④尽管",
+      "left": [
+        "be grateful",
+        "decorate ...",
+        "fade",
+        "in spite"
+      ],
+      "right": [
+        "for",
+        "with",
+        "away",
+        "of"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037o_4bcggt",
+      "type": "matching",
+      "question": "不限顺序配对短语：①反思②利用③社交媒体④有共同点",
+      "left": [
+        "reflect",
+        "take",
+        "social",
+        "have sth"
+      ],
+      "right": [
+        "on",
+        "advantage of",
+        "media",
+        "in common"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_35t9r8",
+      "type": "matching",
+      "question": "不限顺序配对短语：①对...有信心②农历③平安夜④坦白说",
+      "left": [
+        "have faith",
+        "lunar",
+        "Christmas",
+        "to be"
+      ],
+      "right": [
+        "in",
+        "calendar",
+        "Eve",
+        "frank"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_ae166n",
+      "type": "matching",
+      "question": "不限顺序配对短语：①除了②出发③火锅④...的一瞬间就...",
+      "left": [
+        "except",
+        "set",
+        "hot",
+        "the"
+      ],
+      "right": [
+        "for",
+        "off",
+        "pot",
+        "moment"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_tgn2oh",
+      "type": "matching",
+      "question": "不限顺序配对短语：①道德困境②抱怨③回应④大多数的",
+      "left": [
+        "moral",
+        "complain",
+        "respond",
+        "the majority"
+      ],
+      "right": [
+        "dilemma",
+        "about",
+        "to",
+        "of"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_i17sea",
+      "type": "matching",
+      "question": "不限顺序配对短语：①倾向于做某事②吓跑③急剧下降④用...替换",
+      "left": [
+        "tend",
+        "scare",
+        "a sharp",
+        "replace ..."
+      ],
+      "right": [
+        "to do sth",
+        "away",
+        "drop",
+        "with"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_yc0c1e",
+      "type": "matching",
+      "question": "不限顺序配对短语：①偶然意外地②急救③去世④为了纪念",
+      "left": [
+        "by",
+        "first",
+        "pass",
+        "in"
+      ],
+      "right": [
+        "accident",
+        "aid",
+        "away",
+        "memory of"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_fz3jub",
+      "type": "matching",
+      "question": "不限顺序配对短语：①被...绊倒②流着泪③大量④伤害...",
+      "left": [
+        "trip",
+        "in",
+        "a great",
+        "do harm"
+      ],
+      "right": [
+        "over",
+        "tears",
+        "deal of",
+        "to"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_ce0cpv",
+      "type": "matching",
+      "question": "不限顺序配对短语：①某人突然想到②被允许进入/录取③前往④寻找财富",
+      "left": [
+        "it occur to",
+        "be admitted",
+        "head",
+        "seek one's"
+      ],
+      "right": [
+        "sb that",
+        "into",
+        "to",
+        "fortune"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_ker0cl",
+      "type": "matching",
+      "question": "不限顺序配对短语：①谋生②导致引起③一系列的④除了",
+      "left": [
+        "earn",
+        "bring",
+        "series",
+        "apart"
+      ],
+      "right": [
+        "a living",
+        "about",
+        "of",
+        "from"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_xie0n7",
+      "type": "matching",
+      "question": "不限顺序配对短语：①气候变化②定居③第一手地④克制自己",
+      "left": [
+        "climate",
+        "settle",
+        "at first",
+        "contain"
+      ],
+      "right": [
+        "change",
+        "down",
+        "hand",
+        "oneself"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_383n6v",
+      "type": "matching",
+      "question": "不限顺序配对短语：①精神力量②发射火箭③旅行社④分析数据",
+      "left": [
+        "mental",
+        "launch a",
+        "travel",
+        "analyse"
+      ],
+      "right": [
+        "strength",
+        "rocket",
+        "agency",
+        "data"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_gdmbko",
+      "type": "matching",
+      "question": "不限顺序配对短语：①继续②渴望做某事③在船上/飞机上④希望做某事",
+      "left": [
+        "carry",
+        "desire",
+        "on",
+        "in the hope"
+      ],
+      "right": [
+        "on",
+        "to do sth",
+        "board",
+        "of doing sth"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_06ynnl",
+      "type": "matching",
+      "question": "不限顺序配对短语：①太阳系②全球变暖③导致④争论...",
+      "left": [
+        "solar",
+        "global",
+        "result",
+        "argue"
+      ],
+      "right": [
+        "system",
+        "warming",
+        "in",
+        "about"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mqg4037p_sjcf1r",
+      "type": "matching",
+      "question": "不限顺序配对短语：①重视②供养某人③用完...④最后",
+      "left": [
+        "attach improtance",
+        "provide",
+        "run",
+        "in"
+      ],
+      "right": [
+        "to",
+        "for sb",
+        "out of",
+        "closing"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    }
+  ]
+}
