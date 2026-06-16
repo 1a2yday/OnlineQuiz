@@ -91,6 +91,8 @@ export function hasSensitiveWords(name: string): boolean {
   return false;
 }
 
+import { getAppConfig, setAppConfig } from './storage';
+
 // ========== 安全工具 ==========
 
 /**
@@ -149,18 +151,21 @@ const DEFAULT_ADMIN_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c
  * 使用 SHA-256 哈希对比，密码不以明文存储
  */
 export async function verifyAdminPassword(password: string): Promise<boolean> {
-  const { getAppConfig } = await import('./storage');
-  const config = getAppConfig();
-  const storedHash = config.adminPasswordHash || DEFAULT_ADMIN_PASSWORD_HASH;
-  const inputHash = await sha256(password);
-  return inputHash === storedHash;
+  try {
+    const config = getAppConfig();
+    const storedHash = config.adminPasswordHash || DEFAULT_ADMIN_PASSWORD_HASH;
+    const inputHash = await sha256(password);
+    return inputHash === storedHash;
+  } catch (e) {
+    console.error('密码验证失败:', e);
+    return false;
+  }
 }
 
 /**
  * 生成并存储新的管理员密码哈希
  */
 export async function setAdminPassword(newPassword: string): Promise<void> {
-  const { setAppConfig } = await import('./storage');
   const hash = await sha256(newPassword);
   setAppConfig({ adminPasswordHash: hash });
 }
