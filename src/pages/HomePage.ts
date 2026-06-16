@@ -1,6 +1,6 @@
 import { navigateTo } from '../router';
 import { getCurrentUser, getAppConfig, isBlacklisted } from '../storage';
-import { isAdminUser, setAdminUser } from '../utils';
+import { isAdminUser, setAdminUser, verifyAdminPassword, escapeHtml, isValidUrl } from '../utils';
 import { THEMES, getSavedThemeId, saveThemeId, applyTheme, getCurrentTheme } from '../themes';
 
 export function renderHomePage(): void {
@@ -28,15 +28,20 @@ export function renderHomePage(): void {
   const config = getAppConfig();
   const admin = isAdminUser(user.id);
 
+  // 横幅：校验 URL 安全性，防止 XSS
+  const safeBannerUrl = (config.bannerUrl && isValidUrl(config.bannerUrl))
+    ? escapeHtml(config.bannerUrl)
+    : 'banner.gif';
+
   // 横幅：优先显示 banner.gif，加载失败则显示默认渐变
   const bannerHtml = `
-    <img src="${config.bannerUrl || 'banner.gif'}" alt="Banner"
+    <img src="${safeBannerUrl}" alt="Banner"
          class="w-full rounded-2xl object-cover max-h-48"
          onerror="this.style.display='none';document.getElementById('fallback-banner')?.classList.remove('hidden')" />
     <div id="fallback-banner" class="hidden w-full rounded-2xl bg-gradient-to-br from-candy-primary via-candy-primary-light to-candy-border-strong p-6 text-white text-center">
       <div class="text-4xl mb-2">🍬</div>
-      <h2 class="text-xl font-black">${config.welcomeTitle}</h2>
-      <p class="text-sm opacity-80 mt-1">${config.welcomeSubtitle}</p>
+      <h2 class="text-xl font-black">${escapeHtml(config.welcomeTitle)}</h2>
+      <p class="text-sm opacity-80 mt-1">${escapeHtml(config.welcomeSubtitle)}</p>
     </div>`;
 
   app.innerHTML = `
@@ -148,10 +153,10 @@ export function renderHomePage(): void {
     if (e.target === adminModal) adminModal.classList.add('hidden');
   });
 
-  confirmAdminBtn?.addEventListener('click', () => {
+  confirmAdminBtn?.addEventListener('click', async () => {
     const pwd = passwordInput?.value.trim() || '';
-    const cfg = getAppConfig();
-    if (pwd === cfg.adminPassword) {
+    const valid = await verifyAdminPassword(pwd);
+    if (valid) {
       setAdminUser(user.id, true);
       adminModal?.classList.add('hidden');
       renderHomePage();

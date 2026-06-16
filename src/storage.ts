@@ -269,7 +269,7 @@ export function isBlacklisted(userId: string): boolean {
 export function getAppConfig(): AppConfig {
   return getItem<AppConfig>(KEYS.APP_CONFIG, {
     bannerUrl: 'banner.gif',
-    adminPassword: 'admin123',
+    adminPasswordHash: '', // 空则由 utils.ts 使用默认哈希
     welcomeTitle: '英语刷题助手',
     welcomeSubtitle: 'Sweet English, Sweet Learning!',
   });

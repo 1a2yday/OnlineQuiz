@@ -101,7 +101,7 @@ export interface BlacklistEntry {
 
 export interface AppConfig {
   bannerUrl: string; // 自定义横幅图URL（默认 banner.gif）
-  adminPassword: string; // 管理员密码（简单保护）
+  adminPasswordHash: string; // 管理员密码的 SHA-256 哈希（安全存储）
   welcomeTitle: string; // 主页欢迎标题
   welcomeSubtitle: string; // 主页欢迎副标题
 }

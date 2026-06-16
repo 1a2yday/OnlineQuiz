@@ -91,9 +91,82 @@ export function hasSensitiveWords(name: string): boolean {
   return false;
 }
 
-// 检测是否为管理员
+// ========== 安全工具 ==========
+
+/**
+ * 使用 Web Crypto API 计算 SHA-256 哈希
+ * 用于管理员密码的安全存储和验证
+ */
+export async function sha256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * HTML 实体转义，防止 XSS 注入
+ * 转义所有危险的 HTML 字符
+ */
+export function escapeHtml(str: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;',
+  };
+  return str.replace(/[&<>"'`]/g, (ch) => map[ch] || ch);
+}
+
+/**
+ * 校验 URL 是否安全（仅允许 http/https 和相对路径）
+ * 防止 javascript: 等危险协议注入
+ */
+export function isValidUrl(url: string): boolean {
+  if (!url) return false;
+  // 允许相对路径（/ 或 ./ 开头，或不含协议的纯文件名）
+  if (/^(\.{0,2}\/|[a-zA-Z0-9_-])/.test(url) && !/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(url)) {
+    return true;
+  }
+  // 仅允许 http: 和 https: 协议
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+// ========== 管理员 ==========
+
+// 管理员密码的 SHA-256 哈希（默认密码: admin123）
+const DEFAULT_ADMIN_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
+
+/**
+ * 验证管理员密码是否正确
+ * 使用 SHA-256 哈希对比，密码不以明文存储
+ */
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  const { getAppConfig } = await import('./storage');
+  const config = getAppConfig();
+  const storedHash = config.adminPasswordHash || DEFAULT_ADMIN_PASSWORD_HASH;
+  const inputHash = await sha256(password);
+  return inputHash === storedHash;
+}
+
+/**
+ * 生成并存储新的管理员密码哈希
+ */
+export async function setAdminPassword(newPassword: string): Promise<void> {
+  const { setAppConfig } = await import('./storage');
+  const hash = await sha256(newPassword);
+  setAppConfig({ adminPasswordHash: hash });
+}
+
+// 检测是否为管理员（基于 localStorage 会话标记）
 export function isAdminUser(userId: string): boolean {
-  // 简单实现：检查localStorage中的管理员标记
   try {
     const adminIds = JSON.parse(localStorage.getItem('english_quiz_admins') || '[]') as string[];
     return adminIds.includes(userId);
