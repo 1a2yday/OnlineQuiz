@@ -1,14 +1,8 @@
 [
   {
-    "id": "demo-single-choice",
-    "name": "📝 示例单选题库",
-    "file": "demo-single-choice.json",
-    "description": "包含基础语法单选题"
-  },
-  {
-    "id": "TEST",
-    "name": "TEST",
-    "file": "TEST.json",
-    "description": "test"
-  }
+  "id": "PHRASETEST",
+  "name": "短语速测",
+  "file": "PHRASETEST.json",
+  "description": "B2U3-B3U4短语速测"
+}
 ]
