@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题库编辑器 — 英语刷题助手</title>
+<style>
+:root {
+  --c-primary: #FF8C42;
+  --c-bg: #FFF8F0;
+  --c-text: #4A3030;
+  --c-border: #FFE0D0;
+  --c-card: #FFF;
+  --c-accent: #2EC4A7;
+  --c-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --c-editor: #A855F7;
+  --c-editor-bg: #FAF5FF;
+  --c-editor-border: #E8D8FF;
+  --c-danger: #E04060;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--c-bg); color:var(--c-text); line-height:1.6; height:100vh; overflow:hidden; }
+.container { max-width:1100px; margin:0 auto; padding:12px; height:100vh; display:flex; flex-direction:column; }
+
+/* Header */
+.header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.header h1 { font-size:1.5em; white-space:nowrap; }
+.header .subtitle { color:#8B7070; font-size:0.85em; }
+.header-actions { display:flex; gap:8px; align-items:center; }
+.file-name { font-size:12px; color:var(--c-editor); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Bank name row */
+.bank-name-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-shrink:0; }
+.bank-name-row label { font-weight:700; font-size:0.9em; white-space:nowrap; }
+.bank-name-row input { flex:1; padding:8px 12px; border:2px solid var(--c-border); border-radius:10px; font-size:14px; font-family:inherit; outline:none; }
+.bank-name-row input:focus { border-color:var(--c-editor); }
+
+/* Metrics bar */
+.metrics { display:flex; gap:10px; margin-bottom:8px; flex-shrink:0; font-size:12px; }
+.metric { background:var(--c-card); border-radius:8px; padding:4px 10px; border:1px solid var(--c-border); font-weight:700; }
+.metric.single { border-left:3px solid #D06030; }
+.metric.matching { border-left:3px solid #7040B0; }
+.metric.sentence { border-left:3px solid #208060; }
+
+/* Two-pane layout */
+.main-area { display:flex; gap:12px; flex:1; min-height:0; }
+
+/* Left pane */
+.pane-left {
+  flex:0 0 340px;
+  display:flex; flex-direction:column;
+  background:var(--c-editor-bg);
+  border-radius:14px;
+  border:1px solid var(--c-editor-border);
+  overflow:hidden;
+}
+.pane-left-header { padding:8px 12px; font-weight:700; font-size:0.85em; color:var(--c-editor); border-bottom:1px solid var(--c-editor-border); display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+.pane-left-header .count { font-size:12px; color:#8B7070; }
+.question-list { flex:1; overflow-y:auto; padding:6px; }
+
+.question-item {
+  background:var(--c-card);
+  border-radius:10px;
+  padding:8px 10px;
+  margin-bottom:4px;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:all .15s;
+  font-size:13px;
+  display:flex; align-items:center; gap:8px;
+}
+.question-item:hover { border-color:#DDD; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.question-item.active { border-color:var(--c-editor); box-shadow:0 0 0 3px rgba(168,85,247,0.1); }
+.question-item .seq { font-weight:700; color:#8B7070; font-size:12px; min-width:20px; }
+.question-item .preview { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.question-item .del-btn {
+  background:none; border:none; color:#C0C0C0; cursor:pointer; font-size:16px; padding:2px 4px; border-radius:4px;
+  transition:color .15s; line-height:1; flex-shrink:0;
+}
+.question-item .del-btn:hover { color:var(--c-danger); }
+
+.insert-btn {
+  display:block; width:100%; padding:6px 10px; background:none;
+  border:1px dashed var(--c-editor-border); border-radius:8px;
+  color:var(--c-editor); font-size:12px; cursor:pointer; text-align:center;
+  margin-bottom:4px; transition:all .15s;
+}
+.insert-btn:hover { background:rgba(168,85,247,0.06); border-style:solid; }
+.insert-btn.top { margin-top:2px; }
+
+/* Type selector popover */
+.type-popover {
+  position:fixed; background:var(--c-card); border-radius:12px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.18); padding:6px;
+  z-index:100; display:none; border:1px solid #E0E0E0;
+}
+.type-popover.show { display:flex; gap:4px; }
+.type-popover button {
+  padding:8px 14px; border:none; border-radius:8px; font-size:13px;
+  cursor:pointer; font-weight:700; white-space:nowrap;
+  transition:all .15s; background:#F5F5F5; color:var(--c-text);
+}
+.type-popover button:hover { filter:brightness(0.95); transform:translateY(-1px); }
+.type-popover .opt-single:hover { background:#FFE0D0; color:#D06030; }
+.type-popover .opt-matching:hover { background:#E0D0FF; color:#7040B0; }
+.type-popover .opt-sentence:hover { background:#D0F0E8; color:#208060; }
+
+/* Right pane */
+.pane-right {
+  flex:1;
+  background:var(--c-card);
+  border-radius:14px;
+  border:1px solid var(--c-border);
+  padding:16px 20px;
+  overflow-y:auto;
+  box-shadow:var(--c-shadow);
+}
+.pane-right .placeholder {
+  text-align:center; color:#A09090; padding-top:80px;
+  font-size:15px; line-height:2;
+}
+.pane-right .placeholder .icon { font-size:48px; }
+
+/* Editor form */
+.editor-form { }
+.editor-form label { display:block; font-weight:700; margin-bottom:3px; font-size:0.85em; color:#6B5050; margin-top:12px; }
+.editor-form label:first-child { margin-top:0; }
+.editor-form input[type="text"], .editor-form textarea, .editor-form select {
+  width:100%; padding:9px 12px; border:2px solid var(--c-border);
+  border-radius:10px; font-size:14px; font-family:inherit;
+  outline:none; transition:border-color .2s;
+}
+.editor-form input[type="text"]:focus, .editor-form textarea:focus, .editor-form select:focus {
+  border-color:var(--c-editor);
+}
+.editor-form textarea { min-height:70px; resize:vertical; }
+.editor-form textarea.question-input { min-height:50px; font-size:15px; font-weight:700; }
+.editor-form .type-badge {
+  display:inline-block; padding:4px 14px; border-radius:20px;
+  font-weight:700; font-size:13px; margin-bottom:8px;
+}
+.type-badge.single { background:#FFE0D0; color:#D06030; }
+.type-badge.matching { background:#E0D0FF; color:#7040B0; }
+.type-badge.sentence { background:#D0F0E8; color:#208060; }
+
+/* Single choice option inputs */
+.option-row { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+.option-row .opt-label { width:22px; font-weight:700; font-size:13px; color:var(--c-text); text-align:center; }
+.option-row input { flex:1; }
+.answer-select { display:flex; align-items:center; gap:10px; margin-top:8px; }
+.answer-select label { margin:0; font-size:0.85em; }
+.answer-select select { width:auto; padding:6px 12px; }
+
+/* Matching table */
+.match-table { width:100%; border-collapse:collapse; margin-top:8px; }
+.match-table th { background:#F5F0FF; padding:8px 10px; text-align:left; font-size:12px; font-weight:700; color:#6B50A0; }
+.match-table th:last-child { width:40px; text-align:center; }
+.match-table td { padding:6px 4px; border-bottom:1px solid #F0F0F0; }
+.match-table td:last-child { text-align:center; }
+.match-table input { width:100%; padding:7px 10px; border:1px solid #E8E0F0; border-radius:6px; font-size:13px; font-family:inherit; outline:none; }
+.match-table input:focus { border-color:var(--c-editor); }
+.match-table .row-del-btn {
+  background:none; border:none; color:#C0C0C0; cursor:pointer; font-size:16px;
+  padding:2px 4px; border-radius:4px; transition:color .15s;
+}
+.match-table .row-del-btn:hover { color:var(--c-danger); }
+.add-row-btn { margin-top:8px; padding:6px 14px; background:none; border:1px dashed var(--c-editor-border); border-radius:8px; color:var(--c-editor); font-size:12px; cursor:pointer; transition:all .15s; }
+.add-row-btn:hover { background:rgba(168,85,247,0.06); }
+
+/* Sentence-order words area */
+.words-preview { background:#F8F8F8; border-radius:8px; padding:8px 12px; font-size:12px; color:#8B7070; margin-top:6px; }
+.words-preview code { font-family:'Consolas','Menlo',monospace; font-size:12px; word-break:break-all; }
+
+/* Action buttons in editor */
+.editor-actions { display:flex; gap:8px; margin-top:16px; padding-top:12px; border-top:1px solid #F0F0F0; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; gap:5px; padding:9px 18px; border-radius:10px; font-weight:700; font-size:14px; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary { background:var(--c-primary); color:#fff; } .btn-primary:hover { filter:brightness(1.1); }
+.btn-editor { background:var(--c-editor); color:#fff; } .btn-editor:hover { filter:brightness(1.1); }
+.btn-accent { background:var(--c-accent); color:#fff; } .btn-accent:hover { filter:brightness(1.1); }
+.btn-outline { background:#fff; color:var(--c-editor); border:2px solid var(--c-editor); } .btn-outline:hover { background:var(--c-editor-bg); }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn-danger { background:var(--c-danger); color:#fff; } .btn-danger:hover { filter:brightness(1.1); }
+.btn-muted { background:#F0F0F0; color:#707070; } .btn-muted:hover { background:#E0E0E0; }
+
+/* Bottom JSON preview */
+.bottom-panel { flex-shrink:0; margin-top:8px; }
+.collapsible-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--c-card); border:1px solid var(--c-border);
+  border-radius:10px 10px 0 0; padding:8px 14px;
+  cursor:pointer; font-weight:700; font-size:0.85em;
+  user-select:none;
+}
+.collapsible-bar:hover { background:#FFF5F0; }
+.collapsible-bar .arrow { transition:transform .2s; }
+.collapsible-bar .arrow.open { transform:rotate(90deg); }
+.collapsible-body { display:none; }
+.collapsible-body.open { display:block; }
+.json-preview {
+  background:#1E1E2E; color:#CDD6F4; border-radius:0 0 10px 10px;
+  padding:14px 16px; font-family:'Consolas','Menlo',monospace;
+  font-size:12px; max-height:180px; overflow:auto;
+  white-space:pre-wrap; word-break:break-all;
+  border:1px solid var(--c-border); border-top:none;
+}
+
+/* Validation errors */
+.validation-errors {
+  background:#FFF0F0; border:1px solid #FFC0C0; border-radius:10px;
+  padding:10px 14px; margin-bottom:10px; font-size:13px;
+  max-height:150px; overflow-y:auto;
+}
+.validation-errors .err-item { color:#C03040; margin-bottom:2px; }
+.validation-errors .err-item::before { content:'⚠️ '; }
+
+/* Toast */
+.toast { position:fixed; top:20px; right:20px; background:var(--c-editor); color:#fff; padding:12px 20px; border-radius:10px; font-weight:700; z-index:999; animation:popIn .3s ease; }
+.toast.error { background:var(--c-danger); }
+.toast.success { background:var(--c-accent); }
+@keyframes popIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#D0C0C0; border-radius:10px; }
+
+/* Empty state */
+.empty-state { text-align:center; color:#A09090; padding:30px 10px; font-size:14px; line-height:2; }
+.empty-state .icon { font-size:40px; }
+
+/* File input hidden */
+#file-input { display:none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>🛠️ 题库编辑器</h1>
+      <span class="subtitle">编辑已有题库或从零新建，支持三种题型混编</span>
+    </div>
+    <div class="header-actions">
+      <span class="file-name" id="file-name-display"></span>
+      <button class="btn btn-outline btn-sm" onclick="handleOpen()">📂 打开 JSON</button>
+      <button class="btn btn-editor btn-sm" onclick="handleSave()">💾 下载 JSON</button>
+      <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
+    </div>
+  </div>
+
+  <!-- Bank name -->
+  <div class="bank-name-row">
+    <label>📚 题库名称：</label>
+    <input type="text" id="bank-name-input" placeholder="输入题库名称" oninput="onBankNameChange()">
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics" id="metrics-bar"></div>
+
+  <!-- Two-pane area -->
+  <div class="main-area">
+    <!-- Left: question list -->
+    <div class="pane-left">
+      <div class="pane-left-header">
+        <span>📋 题目列表</span>
+        <span class="count" id="question-count"></span>
+      </div>
+      <div class="question-list" id="question-list"></div>
+    </div>
+
+    <!-- Right: editor -->
+    <div class="pane-right" id="editor-pane">
+      <div class="placeholder">
+        <div class="icon">📝</div>
+        从左侧列表选择题目进行编辑<br>或点击插入按钮添加新题
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom: JSON preview -->
+  <div class="bottom-panel">
+    <div class="collapsible-bar" onclick="toggleJSONPreview()">
+      <span>📋 JSON 预览</span>
+      <span style="display:flex;align-items:center;gap:8px;">
+        <button class="btn btn-muted btn-sm" onclick="event.stopPropagation(); copyJSON()">📋 复制</button>
+        <span class="arrow" id="preview-arrow">▶</span>
+      </span>
+    </div>
+    <div class="collapsible-body" id="preview-body">
+      <div class="json-preview" id="json-preview"></div>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="file-input" accept=".json" onchange="handleFileSelect(event)">
+
+  <!-- Type selector popover -->
+  <div class="type-popover" id="type-popover">
+    <button class="opt-single" data-type="single-choice">📝 单选题</button>
+    <button class="opt-matching" data-type="matching">🔗 消消乐</button>
+    <button class="opt-sentence" data-type="sentence-order">📜 还原句子</button>
+  </div>
+
+</div>
+
+<script>
+// ========== 全局状态 ==========
+const quizState = {
+  name: '未命名题库',
+  questions: [],
+  selectedIndex: -1,
+  dirty: false,
+  currentFileName: null
+};
+
+// 匹配编辑器临时行数据
+let matchingRows = [];
+
+// JSON 预览防抖定时器
+let previewTimer = null;
+
+// 当前正在等待插入的位置
+let pendingInsertPos = -1;
+
+// ========== ID 生成 ==========
+function genId() {
+  return 'q_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+// ========== 辅助函数 ==========
+function getTypeLabel(type) {
+  return type === 'single-choice' ? '单选' : type === 'matching' ? '消消乐' : '还原句子';
+}
+
+function getTypeBadgeClass(type) {
+  return type === 'single-choice' ? 'single' : type === 'matching' ? 'matching' : 'sentence';
+}
+
+function getPreview(text, max) {
+  const t = (text || '').replace(/\n/g, ' ');
+  return t.length > max ? t.slice(0, max) + '...' : t;
+}
+
+function getExtra(q) {
+  if (q.type === 'single-choice') return '答案:' + 'ABCD'[q.answer];
+  if (q.type === 'matching') return (q.left||[]).length + '对匹配';
+  return (q.words||[]).length + '词';
+}
+
+function createBlankQuestion(type) {
+  const base = { id: genId(), type, question: '', explanation: '' };
+  if (type === 'single-choice') {
+    return { ...base, options: ['', '', '', ''], answer: 0 };
+  } else if (type === 'matching') {
+    return { ...base, left: [''], right: [''], pairs: [[0, 0]] };
+  } else {
+    return { ...base, words: ['', ''], answer: [0, 1] };
+  }
+}
+
+// ========== Toast ==========
+function showToast(msg, type) {
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (type ? ' ' + type : '');
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+// ========== 核心渲染 ==========
+function renderAll() {
+  renderQuestionList();
+  renderEditor();
+  scheduleJSONPreview();
+  updateMetrics();
+}
+
+function renderQuestionList() {
+  const container = document.getElementById('question-list');
+  const count = document.getElementById('question-count');
+  const qs = quizState.questions;
+
+  count.textContent = qs.length + ' 题';
+  container.innerHTML = '';
+
+  if (qs.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div>题库为空<br>点击下方按钮添加题目</div>';
+  }
+
+  // 顶部插入按钮
+  container.appendChild(createInsertBtn(0, '在开头插入'));
+
+  qs.forEach((q, i) => {
+    // 题目项
+    const item = document.createElement('div');
+    item.className = 'question-item' + (i === quizState.selectedIndex ? ' active' : '');
+    item.innerHTML = `
+      <span class="seq">${i + 1}.</span>
+      <span class="type-badge ${getTypeBadgeClass(q.type)}" style="font-size:10px;padding:2px 7px;">${getTypeLabel(q.type)}</span>
+      <span class="preview">${getPreview(q.question, 30) || '(空题目)'}</span>
+      <button class="del-btn" title="删除">✕</button>
+    `;
+
+    // 点击选择
+    item.addEventListener('click', (e) => {
+      if (e.target.classList.contains('del-btn')) return;
+      quizState.selectedIndex = i;
+      matchingRows = [];
+      renderAll();
+    });
+
+    // 删除按钮
+    item.querySelector('.del-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (confirm(`确定删除第 ${i + 1} 题「${getPreview(q.question, 30)}」吗？`)) {
+        quizState.questions.splice(i, 1);
+        if (quizState.selectedIndex === i) {
+          quizState.selectedIndex = Math.min(i, quizState.questions.length - 1);
+        } else if (quizState.selectedIndex > i) {
+          quizState.selectedIndex--;
+        }
+        quizState.dirty = true;
+        matchingRows = [];
+        renderAll();
+      }
+    });
+
+    container.appendChild(item);
+
+    // 题目后方插入按钮
+    container.appendChild(createInsertBtn(i + 1, '在此之后插入'));
+  });
+}
+
+function createInsertBtn(position, label) {
+  const btn = document.createElement('button');
+  btn.className = 'insert-btn' + (position === 0 ? ' top' : '');
+  btn.textContent = '+ ' + label;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showTypePopover(position, btn);
+  });
+  return btn;
+}
+
+function showTypePopover(position, anchor) {
+  const popover = document.getElementById('type-popover');
+  const rect = anchor.getBoundingClientRect();
+
+  popover.style.top = rect.bottom + 4 + 'px';
+  popover.style.left = Math.min(rect.left, window.innerWidth - 260) + 'px';
+  popover.classList.add('show');
+  pendingInsertPos = position;
+
+  // 点击外部关闭
+  setTimeout(() => {
+    document.addEventListener('click', closePopover, { once: true });
+  }, 0);
+}
+
+function closePopover() {
+  document.getElementById('type-popover').classList.remove('show');
+  pendingInsertPos = -1;
+}
+
+// 类型选择器点击
+document.getElementById('type-popover').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const type = btn.dataset.type;
+  const pos = pendingInsertPos;
+  closePopover();
+  if (type && pos >= 0) {
+    insertQuestion(pos, type);
+  }
+});
+
+function insertQuestion(position, type) {
+  const newQ = createBlankQuestion(type);
+  quizState.questions.splice(position, 0, newQ);
+  quizState.selectedIndex = position;
+  quizState.dirty = true;
+  matchingRows = [];
+  renderAll();
+  showToast('已插入新' + getTypeLabel(type) + '题');
+}
+
+function renderEditor() {
+  const pane = document.getElementById('editor-pane');
+  const idx = quizState.selectedIndex;
+
+  if (idx < 0 || idx >= quizState.questions.length) {
+    pane.innerHTML = `
+      <div class="placeholder">
+        <div class="icon">📝</div>
+        从左侧列表选择题目进行编辑<br>或点击插入按钮添加新题
+      </div>`;
+    return;
+  }
+
+  const q = quizState.questions[idx];
+  let typeFields = '';
+
+  if (q.type === 'single-choice') {
+    typeFields = renderSingleChoiceForm(q);
+  } else if (q.type === 'matching') {
+    typeFields = renderMatchingForm(q);
+  } else if (q.type === 'sentence-order') {
+    typeFields = renderSentenceOrderForm(q);
+  }
+
+  pane.innerHTML = `
+    <div class="editor-form">
+      <span class="type-badge ${getTypeBadgeClass(q.type)}">${getTypeLabel(q.type)} — 第 ${idx + 1} 题</span>
+
+      <label>题目内容</label>
+      <textarea class="question-input" id="edit-question" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
+
+      ${typeFields}
+
+      <label>💡 解析（可选）</label>
+      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" style="min-height:50px;">${escapeHtml(q.explanation || '')}</textarea>
+
+      <div class="editor-actions">
+        <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurrentQuestion()">🗑️ 删除此题</button>
+      </div>
+    </div>`;
+}
+
+function escapeHtml(str) {
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;' };
+  return String(str).replace(/[&<>"']/g, ch => map[ch] || ch);
+}
+
+function onFieldChange(field, value) {
+  const idx = quizState.selectedIndex;
+  if (idx < 0) return;
+  quizState.questions[idx][field] = value;
+  quizState.dirty = true;
+  scheduleJSONPreview();
+  // 题目文本变更时更新左侧预览
+  if (field === 'question') {
+    updateQuestionListItem(idx);
+  }
+}
+
+function updateQuestionListItem(idx) {
+  const items = document.querySelectorAll('.question-item');
+  if (idx < items.length) {
+    const preview = items[idx].querySelector('.preview');
+    if (preview) {
+      preview.textContent = getPreview(quizState.questions[idx].question, 30) || '(空题目)';
+    }
+  }
+}
+
+// ========== 单选题表单 ==========
+function renderSingleChoiceForm(q) {
+  const labels = ['A', 'B', 'C', 'D'];
+  const optionsHtml = q.options.map((opt, i) => `
+    <div class="option-row">
+      <span class="opt-label">${labels[i]}</span>
+      <input type="text" id="edit-opt-${i}" value="${escapeHtml(opt || '')}"
+        oninput="onOptionChange(${i}, this.value)" placeholder="选项 ${labels[i]}">
+    </div>`).join('');
+
+  const answerOpts = labels.map((l, i) => `<option value="${i}" ${q.answer === i ? 'selected' : ''}>${l}</option>`).join('');
+
+  return `
+    <label>选项</label>
+    ${optionsHtml}
+    <div class="answer-select">
+      <label>正确答案：</label>
+      <select id="edit-answer" onchange="onFieldChange('answer', parseInt(this.value))">${answerOpts}</select>
+    </div>`;
+}
+
+function onOptionChange(index, value) {
+  const idx = quizState.selectedIndex;
+  if (idx < 0) return;
+  quizState.questions[idx].options[index] = value;
+  quizState.dirty = true;
+  scheduleJSONPreview();
+}
+
+// ========== 消消乐表单 ==========
+function renderMatchingForm(q) {
+  // 初始化匹配行
+  if (matchingRows.length === 0) {
+    matchingRows = (q.pairs || []).map(([li, ri]) => ({
+      left: (q.left || [])[li] || '',
+      right: (q.right || [])[ri] || ''
+    }));
+    if (matchingRows.length === 0) {
+      matchingRows = [{ left: '', right: '' }];
+    }
+  }
+
+  const rowsHtml = matchingRows.map((row, i) => `
+    <tr>
+      <td><input type="text" value="${escapeHtml(row.left)}"
+        oninput="onMatchingCellChange(${i}, 'left', this.value)" placeholder="左侧 #${i + 1}"></td>
+      <td><input type="text" value="${escapeHtml(row.right)}"
+        oninput="onMatchingCellChange(${i}, 'right', this.value)" placeholder="右侧 #${i + 1}"></td>
+      <td><button class="row-del-btn" onclick="deleteMatchingRow(${i})" title="删除此行">✕</button></td>
+    </tr>`).join('');
+
+  return `
+    <label>配对表格</label>
+    <table class="match-table">
+      <thead><tr><th>左侧单词/短语</th><th>右侧单词/短语</th><th></th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <button class="add-row-btn" onclick="addMatchingRow()">+ 添加一行</button>
+    <p style="font-size:11px;color:#8B7070;margin-top:4px;">每行左侧与右侧为一个配对。右侧在答题时会随机打乱。</p>`;
+}
+
+function syncMatchingToQuestion() {
+  const idx = quizState.selectedIndex;
+  if (idx < 0) return;
+  const q = quizState.questions[idx];
+  q.left = matchingRows.map(r => r.left);
+  q.right = matchingRows.map(r => r.right);
+  q.pairs = matchingRows.map((_, i) => [i, i]);
+  quizState.dirty = true;
+  scheduleJSONPreview();
+}
+
+function onMatchingCellChange(rowIdx, field, value) {
+  matchingRows[rowIdx][field] = value;
+  syncMatchingToQuestion();
+}
+
+function addMatchingRow() {
+  matchingRows.push({ left: '', right: '' });
+  syncMatchingToQuestion();
+  // 重新渲染编辑器以更新表格
+  const idx = quizState.selectedIndex;
+  const q = quizState.questions[idx];
+  document.getElementById('editor-pane').innerHTML = buildEditorHTML(q, idx);
+}
+
+function deleteMatchingRow(rowIdx) {
+  if (matchingRows.length <= 1) {
+    showToast('至少保留一行配对', 'error');
+    return;
+  }
+  matchingRows.splice(rowIdx, 1);
+  syncMatchingToQuestion();
+  const idx = quizState.selectedIndex;
+  const q = quizState.questions[idx];
+  document.getElementById('editor-pane').innerHTML = buildEditorHTML(q, idx);
+}
+
+// 重建编辑器HTML（用于消消乐表格的局部更新）
+function buildEditorHTML(q, idx) {
+  let typeFields = '';
+  if (q.type === 'single-choice') {
+    typeFields = renderSingleChoiceForm(q);
+  } else if (q.type === 'matching') {
+    typeFields = renderMatchingForm(q);
+  } else if (q.type === 'sentence-order') {
+    typeFields = renderSentenceOrderForm(q);
+  }
+  return `
+    <div class="editor-form">
+      <span class="type-badge ${getTypeBadgeClass(q.type)}">${getTypeLabel(q.type)} — 第 ${idx + 1} 题</span>
+
+      <label>题目内容</label>
+      <textarea class="question-input" id="edit-question" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
+
+      ${typeFields}
+
+      <label>💡 解析（可选）</label>
+      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" style="min-height:50px;">${escapeHtml(q.explanation || '')}</textarea>
+
+      <div class="editor-actions">
+        <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurrentQuestion()">🗑️ 删除此题</button>
+      </div>
+    </div>`;
+}
+
+// ========== 还原句子表单 ==========
+function renderSentenceOrderForm(q) {
+  const wordsStr = (q.words || []).join(' | ');
+  const answerPreview = JSON.stringify(q.answer || []);
+  const wordCount = (q.words || []).length;
+
+  return `
+    <label>单词列表（用竖线 <code>|</code> 分隔，<b>按正确顺序</b>书写）</label>
+    <textarea id="edit-words" oninput="onWordsChange(this.value)" style="min-height:50px;"
+      placeholder="例如：I | like | reading | books">${escapeHtml(wordsStr)}</textarea>
+    <div class="words-preview">
+      单词数：<b>${wordCount}</b> &nbsp;|&nbsp;
+      正确顺序：<code>${escapeHtml(answerPreview)}</code> &nbsp;
+      <span style="color:#8B7070;font-size:11px;">（自动推导）</span>
+    </div>
+    <p style="font-size:11px;color:#8B7070;margin-top:4px;">答题时单词会随机打乱显示，学生按正确顺序点击排列。</p>`;
+}
+
+function onWordsChange(value) {
+  const idx = quizState.selectedIndex;
+  if (idx < 0) return;
+  const words = value.split('|').map(s => s.trim()).filter(s => s !== '');
+  quizState.questions[idx].words = words;
+  quizState.questions[idx].answer = words.map((_, i) => i);
+  quizState.dirty = true;
+  scheduleJSONPreview();
+  // 更新预览
+  const preview = document.querySelector('.words-preview');
+  if (preview) {
+    preview.innerHTML = `
+      单词数：<b>${words.length}</b> &nbsp;|&nbsp;
+      正确顺序：<code>${escapeHtml(JSON.stringify(quizState.questions[idx].answer))}</code> &nbsp;
+      <span style="color:#8B7070;font-size:11px;">（自动推导）</span>`;
+  }
+}
+
+// ========== 删除当前题目 ==========
+function deleteCurrentQuestion() {
+  const idx = quizState.selectedIndex;
+  if (idx < 0) return;
+  const q = quizState.questions[idx];
+  if (!confirm(`确定删除第 ${idx + 1} 题「${getPreview(q.question, 30)}」吗？`)) return;
+  quizState.questions.splice(idx, 1);
+  quizState.selectedIndex = Math.min(idx, quizState.questions.length - 1);
+  quizState.dirty = true;
+  matchingRows = [];
+  renderAll();
+  showToast('已删除题目');
+}
+
+// ========== Metrics ==========
+function updateMetrics() {
+  const bar = document.getElementById('metrics-bar');
+  const qs = quizState.questions;
+  const counts = {};
+  qs.forEach(q => { counts[q.type] = (counts[q.type] || 0) + 1; });
+
+  bar.innerHTML = `
+    <span class="metric single">📝 单选：${counts['single-choice'] || 0}</span>
+    <span class="metric matching">🔗 消消乐：${counts['matching'] || 0}</span>
+    <span class="metric sentence">📜 还原句子：${counts['sentence-order'] || 0}</span>
+    <span style="font-size:12px;color:#8B7070;margin-left:auto;">${quizState.dirty ? '● 未保存' : '● 已保存'}</span>
+  `;
+}
+
+// ========== JSON 预览 ==========
+function scheduleJSONPreview() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(updateJSONPreview, 300);
+}
+
+function updateJSONPreview() {
+  const pre = document.getElementById('json-preview');
+  if (!pre) return;
+  const output = { name: quizState.name, questions: quizState.questions };
+  pre.textContent = JSON.stringify(output, null, 2);
+}
+
+function toggleJSONPreview() {
+  const body = document.getElementById('preview-body');
+  const arrow = document.getElementById('preview-arrow');
+  const isOpen = body.classList.contains('open');
+  if (isOpen) {
+    body.classList.remove('open');
+    arrow.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    arrow.classList.add('open');
+    updateJSONPreview();
+  }
+}
+
+function copyJSON() {
+  const output = { name: quizState.name, questions: quizState.questions };
+  const json = JSON.stringify(output, null, 2);
+  navigator.clipboard.writeText(json)
+    .then(() => showToast('✅ JSON 已复制到剪贴板', 'success'))
+    .catch(() => showToast('⚠️ 复制失败，请手动复制', 'error'));
+}
+
+// ========== 题库名称 ==========
+function onBankNameChange() {
+  quizState.name = document.getElementById('bank-name-input').value || '未命名题库';
+  quizState.dirty = true;
+  scheduleJSONPreview();
+}
+
+// ========== 文件操作 ==========
+function handleOpen() {
+  if (quizState.dirty && !confirm('当前有未保存的修改，是否丢弃并打开新文件？')) return;
+  document.getElementById('file-input').click();
+}
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // 检测是否是 manifest.json
+      if (Array.isArray(data) && data.length > 0 && data[0].file) {
+        showToast('⚠️ 这是 manifest.json，请选择题库 JSON 文件', 'error');
+        return;
+      }
+
+      // 验证结构
+      if (!data.name || !Array.isArray(data.questions)) {
+        showToast('❌ JSON 格式错误：需要 name 和 questions 字段', 'error');
+        return;
+      }
+
+      // 确保每道题都有 id
+      data.questions.forEach(q => {
+        if (!q.id) q.id = genId();
+      });
+
+      quizState.name = data.name;
+      quizState.questions = data.questions;
+      quizState.selectedIndex = data.questions.length > 0 ? 0 : -1;
+      quizState.dirty = false;
+      quizState.currentFileName = file.name;
+      matchingRows = [];
+
+      document.getElementById('bank-name-input').value = quizState.name;
+      document.getElementById('file-name-display').textContent = '📄 ' + file.name;
+
+      renderAll();
+      updateJSONPreview();
+      showToast(`✅ 已加载「${data.name}」— ${data.questions.length} 道题`, 'success');
+    } catch (err) {
+      showToast('❌ JSON 解析失败：' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function handleSave() {
+  const errors = validateAll();
+  if (errors.length > 0) {
+    showValidationErrors(errors);
+    showToast(`❌ 验证失败：${errors.length} 个错误`, 'error');
+    return;
+  }
+
+  const output = { name: quizState.name, questions: quizState.questions };
+  const json = JSON.stringify(output, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const filename = quizState.currentFileName || 'quiz_' + Date.now().toString(36) + '.json';
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  quizState.dirty = false;
+  quizState.currentFileName = filename;
+  document.getElementById('file-name-display').textContent = '📄 ' + filename;
+  updateMetrics();
+  showToast('✅ 题库已下载 → 放入 public/quizzes/ 目录', 'success');
+}
+
+// ========== 验证 ==========
+function handleValidate() {
+  // 先保存编辑器中的最终状态（消消乐）
+  if (quizState.selectedIndex >= 0) {
+    const q = quizState.questions[quizState.selectedIndex];
+    if (q.type === 'matching' && matchingRows.length > 0) {
+      syncMatchingToQuestion();
+    }
+  }
+
+  const errors = validateAll();
+  if (errors.length === 0) {
+    showToast('✅ 验证通过！所有题目格式正确', 'success');
+  } else {
+    showValidationErrors(errors);
+    showToast(`❌ ${errors.length} 个错误`, 'error');
+  }
+}
+
+function validateAll() {
+  const errors = [];
+  const qs = quizState.questions;
+
+  qs.forEach((q, i) => {
+    const num = i + 1;
+    const prefix = `第${num}题`;
+
+    // 通用
+    if (!q.id || String(q.id).trim() === '') errors.push(`${prefix}：缺少题目 ID`);
+    if (!q.question || String(q.question).trim() === '') errors.push(`${prefix}：缺少题目内容`);
+    if (!q.type || !['single-choice', 'matching', 'sentence-order'].includes(q.type)) {
+      errors.push(`${prefix}：题型无效或缺失`);
+      return;
+    }
+
+    // 题型特有
+    if (q.type === 'single-choice') {
+      if (!Array.isArray(q.options) || q.options.length !== 4) {
+        errors.push(`${prefix}：单选需恰好4个选项，当前${q.options?.length || 0}个`);
+      } else {
+        q.options.forEach((opt, oi) => {
+          if (!opt || String(opt).trim() === '') {
+            errors.push(`${prefix}：选项 ${'ABCD'[oi]} 为空`);
+          }
+        });
+      }
+      if (typeof q.answer !== 'number' || q.answer < 0 || q.answer > 3 || !Number.isInteger(q.answer)) {
+        errors.push(`${prefix}：答案必须为 0-3 的整数`);
+      }
+    }
+
+    if (q.type === 'matching') {
+      if (!Array.isArray(q.left) || q.left.length === 0) {
+        errors.push(`${prefix}：左侧单词列表为空`);
+      } else {
+        (q.left || []).forEach((item, li) => {
+          if (!item || String(item).trim() === '') errors.push(`${prefix}：左侧 #${li + 1} 为空`);
+        });
+      }
+      if (!Array.isArray(q.right) || q.right.length === 0) {
+        errors.push(`${prefix}：右侧单词列表为空`);
+      } else {
+        (q.right || []).forEach((item, ri) => {
+          if (!item || String(item).trim() === '') errors.push(`${prefix}：右侧 #${ri + 1} 为空`);
+        });
+      }
+      if (!Array.isArray(q.pairs) || q.pairs.length === 0) {
+        errors.push(`${prefix}：配对列表为空`);
+      } else {
+        q.pairs.forEach((pair, pi) => {
+          if (!Array.isArray(pair) || pair.length !== 2) {
+            errors.push(`${prefix}：配对 #${pi + 1} 格式无效`);
+          } else if (q.left && q.right) {
+            if (pair[0] < 0 || pair[0] >= q.left.length) {
+              errors.push(`${prefix}：配对 #${pi + 1} 左侧索引 ${pair[0]} 超出范围`);
+            }
+            if (pair[1] < 0 || pair[1] >= q.right.length) {
+              errors.push(`${prefix}：配对 #${pi + 1} 右侧索引 ${pair[1]} 超出范围`);
+            }
+          }
+        });
+      }
+    }
+
+    if (q.type === 'sentence-order') {
+      if (!Array.isArray(q.words) || q.words.length < 2) {
+        errors.push(`${prefix}：至少需要2个单词，当前${q.words?.length || 0}个`);
+      } else {
+        q.words.forEach((w, wi) => {
+          if (!w || String(w).trim() === '') errors.push(`${prefix}：单词 #${wi + 1} 为空`);
+        });
+      }
+      if (!Array.isArray(q.answer) || q.answer.length === 0) {
+        errors.push(`${prefix}：正确顺序为空`);
+      } else if (Array.isArray(q.words)) {
+        q.answer.forEach((idx, ai) => {
+          if (typeof idx !== 'number' || idx < 0 || idx >= q.words.length || !Number.isInteger(idx)) {
+            errors.push(`${prefix}：答案索引 [${ai}]=${idx} 无效（范围 0-${q.words.length - 1}）`);
+          }
+        });
+        const unique = new Set(q.answer);
+        if (unique.size !== q.answer.length) {
+          errors.push(`${prefix}：答案索引有重复`);
+        }
+        if (q.answer.length !== q.words.length) {
+          errors.push(`${prefix}：答案索引数(${q.answer.length})与单词数(${q.words.length})不一致`);
+        }
+      }
+    }
+  });
+
+  return errors;
+}
+
+function showValidationErrors(errors) {
+  const pane = document.getElementById('editor-pane');
+  const existing = pane.querySelector('.validation-errors');
+  if (existing) existing.remove();
+
+  const div = document.createElement('div');
+  div.className = 'validation-errors';
+  div.innerHTML = errors.slice(0, 20).map(e => `<div class="err-item">${e}</div>`).join('')
+    + (errors.length > 20 ? `<div class="err-item">...还有 ${errors.length - 20} 个错误</div>` : '');
+
+  pane.insertBefore(div, pane.firstChild);
+
+  // 自动选中有错误的第一个题目
+  const firstErr = errors[0];
+  const match = firstErr.match(/第(\d+)题/);
+  if (match) {
+    const idx = parseInt(match[1]) - 1;
+    if (idx >= 0 && idx < quizState.questions.length && idx !== quizState.selectedIndex) {
+      quizState.selectedIndex = idx;
+      matchingRows = [];
+      renderAll();
+    }
+  }
+}
+
+// ========== 关闭前提示 ==========
+window.addEventListener('beforeunload', (e) => {
+  if (quizState.dirty) {
+    e.preventDefault();
+    e.returnValue = '有未保存的修改，确定离开吗？';
+    return e.returnValue;
+  }
+});
+
+// ========== 键盘快捷键 ==========
+document.addEventListener('keydown', (e) => {
+  // Ctrl+S 保存
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    handleSave();
+  }
+  // Ctrl+O 打开
+  if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+    e.preventDefault();
+    handleOpen();
+  }
+});
+
+// ========== 初始化 ==========
+(function init() {
+  document.getElementById('bank-name-input').value = quizState.name;
+  renderAll();
+  updateJSONPreview();
+  updateMetrics();
+})();
+</script>
+</body>
+</html>
