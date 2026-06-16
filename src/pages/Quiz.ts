@@ -2,6 +2,7 @@ import { navigateTo } from '../router';
 import { getQuizBanks, getCurrentUser, recordWrongAnswer, getWrongCountForQuestion } from '../storage';
 import { formatTime, shuffle } from '../utils';
 import { getSelectedQuizBankId } from './QuizBank';
+import { playSelect, playMatch, playCorrect, playWrong, playAllMatched } from '../sound';
 import type { Question, SingleChoiceQuestion, MatchingQuestion, SentenceOrderQuestion } from '../types';
 
 interface QuizSession {
@@ -17,6 +18,36 @@ interface QuizSession {
 }
 
 let session: QuizSession;
+
+// ========== 粒子特效 ==========
+/** 在匹配成功的卡片位置产生星星粒子爆炸效果 */
+function spawnParticles(element: HTMLElement): void {
+  const rect = element.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const colors = ['#FFD700', '#FF6B9D', '#667EEA', '#2EC4A7', '#FF8C42', '#FFC940'];
+
+  for (let i = 0; i < 10; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    const angle = (Math.PI * 2 * i) / 10 + Math.random() * 0.5;
+    const distance = 30 + Math.random() * 40;
+    const px = Math.cos(angle) * distance;
+    const py = Math.sin(angle) * distance;
+    particle.style.cssText = `
+      left: ${cx}px;
+      top: ${cy}px;
+      background: ${colors[i % colors.length]};
+      --px: ${px}px;
+      --py: ${py}px;
+      width: ${6 + Math.random() * 8}px;
+      height: ${6 + Math.random() * 8}px;
+    `;
+    document.body.appendChild(particle);
+    // 动画结束后清理
+    setTimeout(() => particle.remove(), 550);
+  }
+}
 
 export function renderQuiz(): void {
   const app = document.getElementById('app');
@@ -236,6 +267,7 @@ function bindSingleChoiceEvents(q: SingleChoiceQuestion): void {
       options.forEach((o) => o.classList.remove('selected'));
       opt.classList.add('selected');
       selectedSingleChoice = Number((opt as HTMLElement).dataset.index);
+      playSelect();
       if (submitBtn) submitBtn.style.display = '';
       if (nextBtn) nextBtn.style.display = 'none';
     });
@@ -277,7 +309,10 @@ function handleSingleChoiceResult(q: SingleChoiceQuestion, isCorrect: boolean): 
   session.answers.push(selectedSingleChoice!);
   session.answeredCorrect.push(isCorrect);
 
-  if (!isCorrect) {
+  if (isCorrect) {
+    playCorrect();
+  } else {
+    playWrong();
     const user = getCurrentUser();
     if (user) {
       recordWrongAnswer(user.id, q.id, getCurrentQuestionBankId(q.id));
@@ -355,6 +390,7 @@ function bindMatchingEvents(q: MatchingQuestion): void {
       const idx = Number((el as HTMLElement).dataset.index);
       if (isItemMatched('left', idx)) return;
 
+      playSelect();
       // 取消之前的左选择
       leftItems.forEach((l) => l.classList.remove('matching-selected'));
       el.classList.add('matching-selected');
@@ -370,6 +406,7 @@ function bindMatchingEvents(q: MatchingQuestion): void {
       // 检查当前 right 是否已被任何 pair 匹配
       if (isItemMatched('right', idx)) return;
 
+      playSelect();
       rightItems.forEach((r) => r.classList.remove('matching-selected'));
       el.classList.add('matching-selected');
       matchingState.rightSelected = idx;
@@ -390,16 +427,19 @@ function bindMatchingEvents(q: MatchingQuestion): void {
       const key = `${pair[0]}-${pair[1]}`;
       matchingState.matched.add(key);
 
+      playMatch();
       leftItems.forEach((l) => {
         if (Number((l as HTMLElement).dataset.index) === pair[0]) {
           l.classList.add('matching-matched');
           l.classList.remove('matching-selected');
+          spawnParticles(l as HTMLElement);
         }
       });
       rightItems.forEach((r) => {
         if (Number((r as HTMLElement).dataset.index) === pair[1]) {
           r.classList.add('matching-matched');
           r.classList.remove('matching-selected');
+          spawnParticles(r as HTMLElement);
         }
       });
 
@@ -408,10 +448,12 @@ function bindMatchingEvents(q: MatchingQuestion): void {
 
       // 检查是否全部匹配 → 自动完成
       if (matchingState.matched.size === q.pairs.length) {
+        playAllMatched();
         handleMatchingComplete(q, nextBtn);
       }
     } else {
       // 匹配失败 - 抖动后取消选择
+      playWrong();
       leftItems.forEach((l) => {
         if (l.classList.contains('matching-selected')) {
           l.classList.add('animate-shake');
@@ -575,6 +617,7 @@ function bindSentenceOrderEvents(q: SentenceOrderQuestion): void {
         const idx = Number((el as HTMLElement).dataset.index);
         const availIdx = sentenceOrderState.availableIndices.indexOf(idx);
         if (availIdx >= 0) {
+          playSelect();
           sentenceOrderState.availableIndices.splice(availIdx, 1);
           sentenceOrderState.selectedOrder.push(idx);
           updateDisplay();
@@ -599,7 +642,10 @@ function bindSentenceOrderEvents(q: SentenceOrderQuestion): void {
     session.answers.push(userAnswer);
     session.answeredCorrect.push(isCorrect);
 
-    if (!isCorrect) {
+    if (isCorrect) {
+      playCorrect();
+    } else {
+      playWrong();
       const user = getCurrentUser();
       if (user) {
         recordWrongAnswer(user.id, q.id, getCurrentQuestionBankId(q.id));

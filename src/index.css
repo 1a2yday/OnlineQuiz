@@ -203,10 +203,13 @@ body {
 }
 
 .matching-matched {
-  opacity: 0.3;
+  opacity: 0.4;
   pointer-events: none;
-  transform: scale(0.9);
-  transition: all 0.3s ease;
+  transform: scale(0.85);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: var(--c-accent) !important;
+  color: white !important;
+  border-color: var(--c-accent) !important;
 }
 
 /* 句子排序 */
@@ -315,6 +318,49 @@ body {
   border: 3px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+/* ========== 消消乐粒子特效 ========== */
+@keyframes particle-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--px), var(--py)) scale(0);
+  }
+}
+
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: particle-burst 0.5s ease-out forwards;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+.match-sparkle {
+  animation: sparkle 0.4s ease-in-out;
+  display: inline-block;
+}
+
+/* 匹配成功后卡片闪光 */
+@keyframes match-flash {
+  0% { box-shadow: 0 0 0 0 rgba(46, 196, 167, 0.6); }
+  50% { box-shadow: 0 0 20px 8px rgba(46, 196, 167, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 196, 167, 0); }
+}
+
+.matching-item.matching-matched {
+  animation: match-flash 0.5s ease-out;
 }
 
 .theme-swatch:hover {
