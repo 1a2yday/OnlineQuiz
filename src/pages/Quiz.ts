@@ -244,7 +244,7 @@ function renderSingleChoice(q: SingleChoiceQuestion): string {
   const options = q.options.map((opt, i) => `
     <button class="option-btn single-option" data-index="${i}">
       <span class="inline-block w-7 h-7 rounded-full bg-candy-border text-candy-primary text-sm font-bold leading-7 text-center mr-3">${String.fromCharCode(65 + i)}</span>
-      ${opt}
+      ${nl2br(opt)}
     </button>
   `).join('');
 
@@ -348,7 +348,7 @@ function renderMatching(q: MatchingQuestion): string {
   const leftItems = q.left.map((item, i) => `
     <div class="matching-item matching-left p-3 rounded-xl border-2 border-candy-border bg-white text-center font-semibold text-candy-text cursor-pointer transition-all"
          data-side="left" data-index="${i}">
-      ${item}
+      ${nl2br(item)}
     </div>
   `).join('');
 
@@ -356,7 +356,7 @@ function renderMatching(q: MatchingQuestion): string {
     .map(({ item, origIdx }) => `
     <div class="matching-item matching-right p-3 rounded-xl border-2 border-candy-border bg-white text-center font-semibold text-candy-text cursor-pointer transition-all"
          data-side="right" data-index="${origIdx}">
-      ${item}
+      ${nl2br(item)}
     </div>
   `).join('');
 
@@ -561,7 +561,7 @@ function renderSentenceOrder(q: SentenceOrderQuestion): string {
   // 打乱单词显示顺序，保留原始索引用于答案判断
   const wordChips = shuffle(q.words.map((word, i) => ({ word, origIdx: i })))
     .map(({ word, origIdx }) => `
-    <span class="word-chip word-available" data-index="${origIdx}">${word}</span>
+    <span class="word-chip word-available" data-index="${origIdx}">${nl2br(word)}</span>
   `).join('');
 
   return `
@@ -598,7 +598,7 @@ function bindSentenceOrderEvents(q: SentenceOrderQuestion): void {
       resultArea.innerHTML = '<span class="text-sm text-candy-text-light">按正确顺序点击下方单词...</span>';
     } else {
       resultArea.innerHTML = selectedOrder.map((idx, i) => `
-        <span class="word-chip selected-for-order cursor-pointer" data-remove="${i}">${q.words[idx]}</span>
+        <span class="word-chip selected-for-order cursor-pointer" data-remove="${i}">${nl2br(q.words[idx])}</span>
       `).join('');
       // 绑定已选单词的点击移除
       resultArea.querySelectorAll('[data-remove]').forEach((el) => {
@@ -613,7 +613,7 @@ function bindSentenceOrderEvents(q: SentenceOrderQuestion): void {
     }
 
     wordsArea.innerHTML = availableIndices.map((idx) => `
-      <span class="word-chip word-available cursor-pointer" data-index="${idx}">${q.words[idx]}</span>
+      <span class="word-chip word-available cursor-pointer" data-index="${idx}">${nl2br(q.words[idx])}</span>
     `).join('');
 
     // 绑定可选单词的点击
@@ -767,7 +767,7 @@ function showExplanation(explanation?: string): void {
   const area = document.getElementById('explanation-area');
   if (!area) return;
   if (explanation) {
-    area.innerHTML = `<span class="font-bold text-candy-primary">💡 解析：</span>${explanation}`;
+    area.innerHTML = `<span class="font-bold text-candy-primary">💡 解析：</span>${nl2br(explanation)}`;
     area.classList.remove('hidden');
   }
 }
