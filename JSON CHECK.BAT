@@ -1,0 +1,1 @@
+node -e "const fs=require('fs'); const files=fs.readdirSync('public/quizzes').filter(f=>f.endsWith('.json')); files.forEach(f=>{const content=fs.readFileSync('public/quizzes/'+f,'utf8'); JSON.parse(content); console.log(f+' OK');});"
