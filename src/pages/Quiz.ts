@@ -234,9 +234,9 @@ function renderQuestion(): void {
   }
 }
 
-/** 将 \n 转换为 <br>，支持题干中的换行 */
+/** 将换行符转换为 <br>，支持题干中的多行文本 */
 function nl2br(text: string): string {
-  return text.replace(/\\n/g, '<br>');
+  return text.replace(/\n/g, '<br>');
 }
 
 // ========== 单选题 ==========
