@@ -25,7 +25,7 @@
         "has built"
       ],
       "answer": 1,
-      "explanation": ""... ago暗示用一般过去时"，而图书馆是被建，因此用was built。"
+      "explanation": "「... ago暗示用一般过去时「，而图书馆是被建，因此用was built。"
     },
     {
       "id": "q_mqgg67km_jr9sh6",
@@ -38,7 +38,7 @@
         "being stuck"
       ],
       "answer": 0,
-      "explanation": "find oneself + 过去分词（stuck）表被动状态，意为“发现自己陷入……”。"
+      "explanation": "find oneself + 过去分词（stuck）表被动状态，意为「发现自己陷入……」。"
     },
     {
       "id": "q_mqgg67km_szd8mv",
@@ -64,7 +64,7 @@
         "to be solved"
       ],
       "answer": 0,
-      "explanation": "在英语中，当 “主语 + be + 形容词 + 不定式” 结构中的形容词表示 难易、轻重、好坏、舒适程度（如 hard, easy, difficult, heavy, nice, pleasant, comfortable, fit 等）时，不定式用主动形式表被动，这个谜题解决起来很困难。"
+      "explanation": "在英语中，当 「主语 + be + 形容词 + 不定式」 结构中的形容词表示 难易、轻重、好坏、舒适程度（如 hard, easy, difficult, heavy, nice, pleasant, comfortable, fit 等）时，不定式用主动形式表被动，这个谜题解决起来很困难。"
     },
     {
       "id": "q_mqgg67km_ijtlvc",
@@ -77,7 +77,7 @@
         "makes up"
       ],
       "answer": 0,
-      "explanation": "consist of 无被动形式，主动表“由...组成”。"
+      "explanation": "consist of 无被动形式，主动表「由...组成」。"
     },
     {
       "id": "q_mqgg67km_aqeasv",
@@ -129,8 +129,7 @@
         "were used to have"
       ],
       "answer": 0,
-      "explanation": "used to do 表示“过去常常/曾经...”，be used to doing习惯做某事；be used to do被用来做"
-   , there be句型不能用have代替be" ，这里过去曾有许多书，但现在它已经成为了沙漠。"},
+      "explanation": "used to do 表示「过去常常/曾经...」，be used to doing习惯做某事；be used to do被用来做。there be句型不能用have代替be，这里过去曾有许多书，但现在它已经成为了沙漠。"},
     {
       "id": "q_mqgg67km_u08x2r",
       "type": "single-choice",
@@ -181,7 +180,7 @@
         "interested; interested"
       ],
       "answer": 0,
-      "explanation": "-ing 形容词表示“令人...的”，-ed 形容词表示“感到...的”。interesting有趣的；令人有兴趣的；interested感到有趣的；感兴趣的"
+      "explanation": "-ing 形容词表示「令人...的」，-ed 形容词表示「感到...的」。interesting有趣的；令人有兴趣的；interested感到有趣的；感兴趣的"
     },
     {
       "id": "q_mqgg67km_t2yizr",
@@ -220,7 +219,7 @@
         "As a result of"
       ],
       "answer": 0,
-      "explanation": "让步状语 in spite of = despite，意为“尽管"，＋名词短语heavy rain，Altough只能加句子"
+      "explanation": "让步状语 in spite of = despite，意为「尽管「，＋名词短语heavy rain，Altough只能加句子"
     },
     {
       "id": "q_mqgg67km_ct9vn1",
@@ -233,7 +232,7 @@
         "hire"
       ],
       "answer": 0,
-      "explanation": "the + 序数词 + n. + to do 结构。表示“第几个做某事的人”，林医生是第一个被那个医院雇为外科医生的女性，注意此处要用被动式to be done，因为是被雇佣"
+      "explanation": "the + 序数词 + n. + to do 结构。表示「第几个做某事的人」，林医生是第一个被那个医院雇为外科医生的女性，注意此处要用被动式to be done，因为是被雇佣"
     },
     {
       "id": "q_mqgg67km_wb5s0s",
@@ -376,7 +375,7 @@
         "being solved"
       ],
       "answer": 0,
-      "explanation": "with + n. + to do 表示“有...要解决”，不定式充当宾补，表示未发生动作。有这么多问题要解决，总统一夜无眠。"
+      "explanation": "with + n. + to do 表示「有...要解决」，不定式充当宾补，表示未发生动作。有这么多问题要解决，总统一夜无眠。"
     },
     {
       "id": "q_mqgg67km_kfp80d",
