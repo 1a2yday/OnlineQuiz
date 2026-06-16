@@ -1,5 +1,5 @@
 import { navigateTo } from '../router';
-import { getQuizBanks, deleteQuizBank, getCurrentUser } from '../storage';
+import { getQuizBanks, deleteQuizBank, getCurrentUser, loadRemoteQuizzes } from '../storage';
 import { isAdminUser, generateQuizBankId, generateQuestionId } from '../utils';
 import type { QuizBank, Question } from '../types';
 import { SAMPLE_QUIZ_JSON } from '../sampleQuiz';
@@ -67,7 +67,10 @@ export function renderQuizBank(): void {
       <!-- 顶部导航 -->
       <div class="flex items-center gap-3 mb-4 animate-fade-in-up">
         <button id="back-home-btn" class="text-2xl text-candy-primary leading-none">&larr;</button>
-        <h1 class="text-xl font-black text-candy-text">题库列表</h1>
+        <h1 class="text-xl font-black text-candy-text flex-1">题库列表</h1>
+        <button id="refresh-banks-btn" class="text-sm text-candy-text-muted underline hover:text-candy-primary transition-colors" title="刷新云端题库">
+          🔄 刷新
+        </button>
       </div>
 
       <!-- 题库列表 -->
@@ -104,6 +107,21 @@ export function renderQuizBank(): void {
 
   // 事件绑定
   document.getElementById('back-home-btn')?.addEventListener('click', () => navigateTo('home'));
+
+  // 手动刷新云端题库
+  document.getElementById('refresh-banks-btn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('refresh-banks-btn');
+    if (btn) {
+      btn.textContent = '⏳ 加载中...';
+      (btn as HTMLButtonElement).disabled = true;
+    }
+    // 清除远程题库缓存
+    localStorage.removeItem('english_quiz_remote_cache');
+    // 重新拉取（完成后自动触发 remote-quizzes-loaded 事件刷新列表）
+    await loadRemoteQuizzes();
+    // 确保刷新列表（即使事件没触发也更新）
+    renderQuizBank();
+  });
 
   // 选择题库
   document.querySelectorAll('[data-bank-id]').forEach((el) => {
