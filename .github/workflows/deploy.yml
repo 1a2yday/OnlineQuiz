@@ -12,8 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Enable corepack
-        run: corepack enable
+      - name: Install pnpm
+        run: npm install -g pnpm@9.0.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -21,7 +21,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --ignore-scripts
 
       - name: Build
         run: pnpm run build:local
