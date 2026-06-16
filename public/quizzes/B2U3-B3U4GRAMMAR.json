@@ -1,0 +1,408 @@
+{
+  "name": "B2U3-B3U4语法速测",
+  "questions": [
+    {
+      "id": "q_mqgg67km_m4thha",
+      "type": "single-choice",
+      "question": "Over the past few years, many new apps ______ to make our life easier.",
+      "options": [
+        "have developed",
+        "have been developed",
+        "developed",
+        "were developed"
+      ],
+      "answer": 1,
+      "explanation": "现在完成时被动语态：主语 apps 与 develop 被动，over the past few years 提示现在完成时。"
+    },
+    {
+      "id": "q_mqgg67km_w9l7re",
+      "type": "single-choice",
+      "question": "The libray ___________________  a year ago to provide students a better learning environment.",
+      "options": [
+        "has been built",
+        "built",
+        "was built",
+        "has built"
+      ],
+      "answer": 1,
+      "explanation": ""... ago暗示用一般过去时"，而图书馆是被建，因此用was built。"
+    },
+    {
+      "id": "q_mqgg67km_jr9sh6",
+      "type": "single-choice",
+      "question": "The old man found himself ______ out of work after the factory closed.",
+      "options": [
+        "stuck",
+        "sticking",
+        "to stick",
+        "being stuck"
+      ],
+      "answer": 0,
+      "explanation": "find oneself + 过去分词（stuck）表被动状态，意为“发现自己陷入……”。"
+    },
+    {
+      "id": "q_mqgg67km_szd8mv",
+      "type": "single-choice",
+      "question": "Many articles ______ us how the Internet has changed our lives have been written.",
+      "options": [
+        "telling",
+        "to tell",
+        "told",
+        "being told"
+      ],
+      "answer": 0,
+      "explanation": "现在分词短语作定语表主动动作：articles telling us... = articles that tell us..."
+    },
+    {
+      "id": "q_mqgg67km_7qj5ph",
+      "type": "single-choice",
+      "question": "The puzzle is hard ______.",
+      "options": [
+        "to solve",
+        "solving",
+        "solved",
+        "to be solved"
+      ],
+      "answer": 0,
+      "explanation": "在英语中，当 “主语 + be + 形容词 + 不定式” 结构中的形容词表示 难易、轻重、好坏、舒适程度（如 hard, easy, difficult, heavy, nice, pleasant, comfortable, fit 等）时，不定式用主动形式表被动，这个谜题解决起来很困难。"
+    },
+    {
+      "id": "q_mqgg67km_ijtlvc",
+      "type": "single-choice",
+      "question": "The United Kingdom ______ four countries: England, Scotland, Wales and Northern Ireland.",
+      "options": [
+        "consists of",
+        "is consisted of",
+        "is made of",
+        "makes up"
+      ],
+      "answer": 0,
+      "explanation": "consist of 无被动形式，主动表“由...组成”。"
+    },
+    {
+      "id": "q_mqgg67km_aqeasv",
+      "type": "single-choice",
+      "question": "______ by green mountains, the old castle looks very beautiful.",
+      "options": [
+        "Surrounding",
+        "Surrounded",
+        "To surround",
+        "Having surrounded"
+      ],
+      "answer": 1,
+      "explanation": "过去分词作状语：castle 与 surround 被动，故用 Surrounded。"
+    },
+    {
+      "id": "q_mqgg67km_aqe1et",
+      "type": "single-choice",
+      "question": "__________ difficulties, he never loses heart",
+      "options": [
+        "Facing",
+        "Faced",
+        "To face",
+        "Having faced"
+      ],
+      "answer": 0,
+      "explanation":"主语he和动词face为主动关系，因此用现在分词作状语表主动。面对困难时，他从不灰心。"
+    },
+    {
+      "id": "q_mqgg67km_ftp1ou",
+      "type": "single-choice",
+      "question": "If ______ properly, the medicine will work very well.",
+      "options": [
+        "using",
+        "used",
+        "to use",
+        "use"
+      ],
+      "answer": 1,
+      "explanation": "连词+过去分词省略结构：If (it is) used properly...，如果被恰当使用的话"
+    },
+    {
+      "id": "q_mqgg67km_5t15yr",
+      "type": "single-choice",
+      "question": "There ______ a lot of trees here, but now it has become a desert.",
+      "options": [
+        "used to be",
+        "used to have",
+        "were used to being",
+        "were used to have"
+      ],
+      "answer": 0,
+      "explanation": "used to do 表示“过去常常/曾经...”，be used to doing习惯做某事；be used to do被用来做"
+   , there be句型不能用have代替be" ，这里过去曾有许多书，但现在它已经成为了沙漠。"},
+    {
+      "id": "q_mqgg67km_u08x2r",
+      "type": "single-choice",
+      "question": "We passed by a village, many buildings ___________ on top of big hills",
+      "options": [
+        "sitting",
+        "to sit",
+        "sit",
+        "sat"
+      ],
+      "answer": 0,
+      "explanation": "独立主格，主语+非谓语结构，building和sit应该是主动关系，因此用现在分词;我们路过一个村庄，很多建筑坐落在大山丘的顶部"
+    },
+    {
+      "id": "q_mqgg67km_u08xb0",
+      "type": "single-choice",
+      "question": "Imagine ______ the chance to sing on a world stage.",
+      "options": [
+        "having",
+        "to have",
+        "have",
+        "had"
+      ],
+      "answer": 0,
+      "explanation": "imagine + doing 是固定用法，想象做某事"
+    },
+    {
+      "id": "q_mqgg67km_u08xb0",
+      "type": "single-choice",
+      "question": "Imagine ______ the chance to sing on a world stage.",
+      "options": [
+        "having",
+        "to have",
+        "have",
+        "had"
+      ],
+      "answer": 0,
+      "explanation": "imagine + doing 是固定用法，想象做某事"
+    },
+    {
+      "id": "q_mqgg67km_9s2cfe",
+      "type": "single-choice",
+      "question": "Festivals can be very ______, and many children are ______ in them.",
+      "options": [
+        "interesting; interested",
+        "interested; interesting",
+        "interesting; interesting",
+        "interested; interested"
+      ],
+      "answer": 0,
+      "explanation": "-ing 形容词表示“令人...的”，-ed 形容词表示“感到...的”。interesting有趣的；令人有兴趣的；interested感到有趣的；感兴趣的"
+    },
+    {
+      "id": "q_mqgg67km_t2yizr",
+      "type": "single-choice",
+      "question": "The ______ moon is shining brightly in the sky.",
+      "options": [
+        "shining",
+        "shone",
+        "shiningly",
+        "shine"
+      ],
+      "answer": 0,
+      "explanation": "现在分词作定语表主动：shining moon = moon that is shining。"
+    },
+    {
+      "id": "q_mqgg67km_nangbf",
+      "type": "single-choice",
+      "question": "Of all the traditional festivals, the harvest festival is ______.",
+      "options": [
+        "the most significant",
+        "more significant",
+        "most significant",
+        "more significant than any"
+      ],
+      "answer": 0,
+      "explanation": "of all... 最高级用法，需用 the most significant。在所有的传统节日里，丰收节是最重要的"
+    },
+    {
+      "id": "q_mqgg67km_19nv0c",
+      "type": "single-choice",
+      "question": "______ the heavy rain, they still went to the celebration.",
+      "options": [
+        "In spite of",
+        "Although",
+        "Instead of",
+        "As a result of"
+      ],
+      "answer": 0,
+      "explanation": "让步状语 in spite of = despite，意为“尽管"，＋名词短语heavy rain，Altough只能加句子"
+    },
+    {
+      "id": "q_mqgg67km_ct9vn1",
+      "type": "single-choice",
+      "question": "Dr Lin was the first woman ever ______ as a physician in that hospital.",
+      "options": [
+        "to be hired",
+        "being hired",
+        "hired",
+        "hire"
+      ],
+      "answer": 0,
+      "explanation": "the + 序数词 + n. + to do 结构。表示“第几个做某事的人”，林医生是第一个被那个医院雇为外科医生的女性，注意此处要用被动式to be done，因为是被雇佣"
+    },
+    {
+      "id": "q_mqgg67km_wb5s0s",
+      "type": "single-choice",
+      "question": "Having ______ over 50,000 babies, she became a legend.",
+      "options": [
+        "delivered",
+        "to deliver",
+        "delivering",
+        "been delivered"
+      ],
+      "answer": 0,
+      "explanation": "现在分词的完成式 having done 强调先于主句动作。"
+    },
+    {
+      "id": "q_mqgg67km_voeof6",
+      "type": "single-choice",
+      "question": "The situation ______ he had to make a choice was tough.",
+      "options": [
+        "where",
+        "which",
+        "when",
+        "why"
+      ],
+      "answer": 0,
+      "explanation": "先行词为抽象地点（situation）且缺状语时，用 where 引导定语从句，他不得不做出选择的这种处境很艰难。"
+    },
+    {
+      "id": "q_mqgg67km_2j7mqt",
+      "type": "single-choice",
+      "question": "______ a living, he started a small restaurant.",
+      "options": [
+        "To earn",
+        "Earning",
+        "Earn",
+        "Earned"
+      ],
+      "answer": 0,
+      "explanation": "不定式作目的状语。为了谋生，他开了一个小餐厅"
+    },
+    {
+      "id": "q_mqgg67km_wheak2",
+      "type": "single-choice",
+      "question": "The Mission District, one of the oldest parts of the city, is a place ______ you can see many murals.",
+      "options": [
+        "where",
+        "which",
+        "when",
+        "what"
+      ],
+      "answer": 0,
+      "explanation": "定语从句 where 修饰 place。"
+    },
+    {
+      "id": "q_mqgg67km_whg4e",
+      "type": "single-choice",
+      "question": "The internet makes _______ convenient for us to search for information.",
+      "options": [
+        "that",
+        "it",
+        "we",
+        "this"
+      ],
+      "answer": 1,
+      "explanation": "make it + adj. + (for sb) + to do句式，主语使得做某事（对某人来说）怎么样；因特网使得我们搜索信息很方便。"
+    },
+    {
+      "id": "q_mqgg67km_jay9hx",
+      "type": "single-choice",
+      "question": "The desire ______ the universe is shared by many people.",
+      "options": [
+        "to explore",
+        "exploring",
+        "explored",
+        "explore"
+      ],
+      "answer": 0,
+      "explanation": "desire/hope/wish等多与未来相关的抽象名词 + to do 作定语表未发生动作。探索宇宙的渴望是很多人所共有的"
+    },
+    {
+      "id": "q_mqgg67km_4wrkgs",
+      "type": "single-choice",
+      "question": "He woke up only ______ everybody had left.",
+      "options": [
+        "to find",
+        "finding",
+        "found",
+        "find"
+      ],
+      "answer": 0,
+      "explanation": "only to do 表示出乎意料的结果。他醒来结果却发现大家都离开了"
+    },
+    {
+      "id": "q_mqgg67km_xgyert",
+      "type": "single-choice",
+      "question": "The astronauts trained very hard ______ into space.",
+      "options": [
+        "to go",
+        "going",
+        "went",
+        "gone"
+      ],
+      "answer": 0,
+      "explanation": "不定式作目的状语。为了进入太空，宇航员们很努力地训练"
+    },
+    {
+      "id": "q_mqgg67km_fvt8s4",
+      "type": "single-choice",
+      "question": "Remember ______ the door before you leave.",
+      "options": [
+        "to lock",
+        "locking",
+        "locked",
+        "lock"
+      ],
+      "answer": 0,
+      "explanation": "remember to do 记得要做；remember doing 记得做过。你离开之前记得要关门"
+    },
+    {
+      "id": "q_mqgg67km_z12i80",
+      "type": "single-choice",
+      "question": "The space station ______ next year will be the largest ever.",
+      "options": [
+        "to be launched",
+        "launching",
+        "launched",
+        "being launched"
+      ],
+      "answer": 0,
+      "explanation": "不定式作定语表将来，太空站是被发射，因此要用被动式：to be launched。明年(将要被发射的)太空站将会是有史以来最大的"
+    },
+    {
+      "id": "q_mqgg67km_hkmt4o",
+      "type": "single-choice",
+      "question": "With so many problems ______, the president had a sleepless night.",
+      "options": [
+        "to solve",
+        "solving",
+        "solved",
+        "being solved"
+      ],
+      "answer": 0,
+      "explanation": "with + n. + to do 表示“有...要解决”，不定式充当宾补，表示未发生动作。有这么多问题要解决，总统一夜无眠。"
+    },
+    {
+      "id": "q_mqgg67km_kfp80d",
+      "type": "single-choice",
+      "question": "It's dangerous ______ the internet without any protection.",
+      "options": [
+        "to use",
+        "using",
+        "used",
+        "use"
+      ],
+      "answer": 0,
+      "explanation": "It's adj. + to do 结构，做某事是怎么样的。没有任何保护的情况下使用因特网是非常危险的"
+    },
+    {
+      "id": "q_mqgg67km_kd21jy",
+      "type": "single-choice",
+      "question": "He is likely ______ late because of the traffic.",
+      "options": [
+        "to be",
+        "being",
+        "be",
+        "been"
+      ],
+      "answer": 0,
+      "explanation": "be likely to do 是固定搭配。"
+    }
+  ]
+}
