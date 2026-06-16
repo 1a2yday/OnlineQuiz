@@ -145,7 +145,7 @@ export function renderAdmin(): void {
     const subtitleInput = document.getElementById('welcome-subtitle-input') as HTMLInputElement;
     setAppConfig({
       welcomeTitle: titleInput?.value.trim() || '英语刷题助手',
-      welcomeSubtitle: subtitleInput?.value.trim() || 'Sweet English, Sweet Learning!',
+      welcomeSubtitle: subtitleInput?.value.trim() || '每天进步E点点',
     });
     renderAdmin();
   });

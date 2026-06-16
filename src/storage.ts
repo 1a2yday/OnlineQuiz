@@ -266,13 +266,17 @@ export function isBlacklisted(userId: string): boolean {
 }
 
 // ========== 应用配置 ==========
+const APP_CONFIG_DEFAULTS: AppConfig = {
+  bannerUrl: 'banner.gif',
+  adminPasswordHash: '', // 空则由 utils.ts 使用默认哈希
+  welcomeTitle: '英语刷题助手',
+  welcomeSubtitle: '每天进步E点点',
+};
+
+/** 获取应用配置，始终用默认值补全缺失字段，防止旧版不完整配置导致字段丢失 */
 export function getAppConfig(): AppConfig {
-  return getItem<AppConfig>(KEYS.APP_CONFIG, {
-    bannerUrl: 'banner.gif',
-    adminPasswordHash: '', // 空则由 utils.ts 使用默认哈希
-    welcomeTitle: '英语刷题助手',
-    welcomeSubtitle: '每天进步E点点',
-  });
+  const stored = getItem<Partial<AppConfig>>(KEYS.APP_CONFIG, {});
+  return { ...APP_CONFIG_DEFAULTS, ...stored };
 }
 
 export function setAppConfig(config: Partial<AppConfig>): void {
