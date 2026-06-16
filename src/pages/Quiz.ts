@@ -234,6 +234,11 @@ function renderQuestion(): void {
   }
 }
 
+/** 将 \n 转换为 <br>，支持题干中的换行 */
+function nl2br(text: string): string {
+  return text.replace(/\\n/g, '<br>');
+}
+
 // ========== 单选题 ==========
 function renderSingleChoice(q: SingleChoiceQuestion): string {
   const options = q.options.map((opt, i) => `
@@ -245,7 +250,7 @@ function renderSingleChoice(q: SingleChoiceQuestion): string {
 
   return `
     <div class="card-candy">
-      <h3 class="text-lg font-bold text-candy-text mb-4">${q.question}</h3>
+      <h3 class="text-lg font-bold text-candy-text mb-4">${nl2br(q.question)}</h3>
       <div id="single-options">${options}</div>
       <div id="explanation-area" class="hidden mt-4 p-3 rounded-xl bg-candy-bg-light border border-candy-border text-sm text-candy-text-secondary leading-relaxed"></div>
     </div>`;
@@ -357,7 +362,7 @@ function renderMatching(q: MatchingQuestion): string {
 
   return `
     <div class="card-candy">
-      <h3 class="text-lg font-bold text-candy-text mb-2">${q.question}</h3>
+      <h3 class="text-lg font-bold text-candy-text mb-2">${nl2br(q.question)}</h3>
       <p class="text-xs text-candy-text-muted mb-4">点击左侧再点击右侧进行匹配</p>
       <div class="flex gap-3">
         <div class="flex-1 flex flex-col gap-2" id="matching-left">${leftItems}</div>
@@ -562,7 +567,7 @@ function renderSentenceOrder(q: SentenceOrderQuestion): string {
   return `
     <div class="card-candy">
       <h3 class="text-lg font-bold text-candy-text mb-1">还原句子</h3>
-      <p class="text-sm text-candy-primary font-semibold mb-4">${q.question}</p>
+      <p class="text-sm text-candy-primary font-semibold mb-4">${nl2br(q.question)}</p>
 
       <!-- 已选区域 -->
       <div id="sentence-result" class="min-h-[52px] p-3 rounded-2xl border-2 border-dashed border-candy-border-strong bg-candy-bg-light mb-4 flex flex-wrap gap-2 items-center">
