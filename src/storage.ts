@@ -271,7 +271,7 @@ export function getAppConfig(): AppConfig {
     bannerUrl: 'banner.gif',
     adminPasswordHash: '', // 空则由 utils.ts 使用默认哈希
     welcomeTitle: '英语刷题助手',
-    welcomeSubtitle: 'Sweet English, Sweet Learning!',
+    welcomeSubtitle: '每天进步E点点',
   });
 }
 
