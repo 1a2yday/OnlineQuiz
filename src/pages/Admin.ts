@@ -1,6 +1,6 @@
 import { navigateTo } from '../router';
 import { getCurrentUser, getUsers, getBlacklist, addToBlacklist, removeFromBlacklist, deleteUserData, getAppConfig, setAppConfig, getQuizBanks, deleteQuizBank } from '../storage';
-import { isAdminUser, escapeHtml, isValidUrl, setAdminPassword } from '../utils';
+import { isAdminUser, escapeHtml, isValidUrl, setAdminPassword, fetchVisitStats } from '../utils';
 
 export function renderAdmin(): void {
   const app = document.getElementById('app');
@@ -70,6 +70,23 @@ export function renderAdmin(): void {
       </div>
 
       <div class="space-y-4">
+        <!-- 访问统计 -->
+        <div class="card-candy animate-fade-in-up">
+          <h3 class="font-black text-candy-text mb-3">📊 网站访问统计</h3>
+          <div id="visit-stats" class="flex gap-6 items-center justify-center py-3">
+            <div class="text-center">
+              <div class="text-3xl font-black text-candy-accent" id="visit-total">—</div>
+              <div class="text-xs text-candy-text-muted mt-1">历史总计</div>
+            </div>
+            <div class="w-px h-12 bg-candy-border"></div>
+            <div class="text-center">
+              <div class="text-3xl font-black text-candy-primary" id="visit-today">—</div>
+              <div class="text-xs text-candy-text-muted mt-1">今日访问</div>
+            </div>
+          </div>
+          <p class="text-xs text-candy-text-muted text-center">每小时同 IP 仅计一次，数据保存在服务器</p>
+        </div>
+
         <!-- 主页外观设置 -->
         <div class="card-candy animate-fade-in-up">
           <h3 class="font-black text-candy-text mb-3">🎨 主页外观</h3>
@@ -215,4 +232,29 @@ export function renderAdmin(): void {
       }
     });
   });
+
+  // 加载访问统计
+  loadVisitStats();
+}
+
+async function loadVisitStats(): Promise<void> {
+  const stats = await fetchVisitStats();
+  const totalEl = document.getElementById('visit-total');
+  const todayEl = document.getElementById('visit-today');
+  if (!totalEl || !todayEl) return;
+  if (stats) {
+    totalEl.textContent = stats.total.toLocaleString();
+    todayEl.textContent = stats.today.toLocaleString();
+  } else {
+    totalEl.textContent = '❌';
+    todayEl.textContent = '❌';
+    document.querySelector('#visit-stats + p')?.remove();
+    const wrapper = document.getElementById('visit-stats')?.parentElement;
+    if (wrapper) {
+      const note = document.createElement('p');
+      note.className = 'text-xs text-candy-text-muted text-center';
+      note.textContent = '服务未运行或无法连接，数据仅在有服务器时可用';
+      wrapper.appendChild(note);
+    }
+  }
 }

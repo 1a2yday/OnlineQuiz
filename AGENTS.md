@@ -14,7 +14,9 @@
 
 ```
 ├── tools/               # 辅助工具
-│   └── quiz-generator.html  # 题库生成工具（CSV→JSON，A列题型自动识别）
+│   ├── quiz-generator.html  # 题库生成工具（CSV→JSON，A列题型自动识别）
+│   ├── quiz-editor.html     # 可视化题库编辑（拖拽排序/序号移动/直接保存/预览）
+│   └── quiz-manager.html    # 题库管理器（读取目录/启用禁用/删除重命名/预览）
 ├── scripts/             # 构建与启动脚本
 │   ├── build.sh         # 构建脚本
 │   ├── dev.sh           # 开发环境启动脚本
@@ -37,7 +39,7 @@
 │   └── pages/           # 页面组件
 │       ├── HomePage.ts        # 主页（横幅/按钮/主题切换/管理员登录）
 │       ├── NameEntry.ts       # 首次取名页
-│       ├── QuizBank.ts        # 题库列表与管理（含导入/删除）
+│       ├── QuizBank.ts        # 题库列表与管理（含导入/删除/随机顺序开关）
 │       ├── Quiz.ts            # 答题页（核心，三种题型 + 错题重刷模式）
 │       ├── QuizResult.ts      # 答题结果与排行榜
 │       ├── WrongQuestions.ts  # 错题集（含已掌握标记）
@@ -175,6 +177,30 @@
 
 > ⚠️ **注意**：生成的 JSON 通过应用内的「导入题库」弹窗粘贴导入，导入后仅当前浏览器可见。**如需所有用户看到**，将题库 JSON 放入 `public/quizzes/` 目录并在 `manifest.json` 注册，重新构建部署。
 
+### 随机顺序模式
+
+在题库列表页可勾选「🔄 题目出现顺序随机」：
+- 勾选状态通过 `sessionStorage`（`english_quiz_randomize`）传递到答题页
+- `Quiz.ts` 的 `initNormalSession()` 检测标志后调用 `shuffle()` 打乱题目数组
+- `sessionStorage` 在关闭标签页时自动清除，每次打开都需重新勾选
+- 不适用于错题重刷模式（错题有自己的内部顺序）
+
+### 管理面板 — 访问统计
+
+`Admin.ts` 新增「📊 网站访问统计」卡片，显示历史总计和今日访问数：
+- 数据由 Express 服务器在 `server/routes/index.ts` 中维护，按 IP+小时去重
+- 通过 `POST /api/visits` 记录访问、`GET /api/visits` 获取统计
+- 纯静态部署时显示「服务未运行」提示
+- `src/utils.ts` 的 `recordVisit()` 在 `src/index.ts` 的 `bootstrap()` 中自动调用
+
+### tools/ 工具的浏览器 API
+
+`tools/` 目录下的 HTML 工具使用浏览器端 Web API：
+- **File System Access API**（`showOpenFilePicker`/`showSaveFilePicker`/`createWritable`）：quiz-editor.html 用于直接打开和保存 JSON 文件；quiz-manager.html 的 `showDirectoryPicker` 用于读取题库目录
+- **IndexedDB**：`quiz-manager.html` 用于持久化 `FileSystemDirectoryHandle`（localStorage 不支持结构化克隆）
+- **FileReader**：降级方案，当 File System Access API 不可用时使用 `<input type="file">`
+- 所有工具均提供降级方案，在 Firefox/Safari 中可正常使用（无直接保存功能）
+
 ### 远程题库系统（服务端托管）
 
 `public/quizzes/` 目录下的题库 JSON 文件会在应用启动时自动拉取，**所有用户可见**，无需手动导入。
@@ -182,9 +208,8 @@
 **当前题库**：
 | 文件 | 名称 | 题目数 |
 |------|------|--------|
-| `PHRASETEST.json` | B2U3-B3U4短语速测 | — |
-| `B2U3-B3U4GRAMMAR.json` | B2U3-B3U4语法速测 | 31 |
-| `demo-single-choice.json` | 示例题库 | — |
+| `PHRASETEST.json` | B2U3-B3U5【短语】速测 | — |
+| `B2U3-B3U5GRAMMAR.json` | B2U3-B3U5【语法】速测 | — |
 
 **特性**：
 - 远程题库在题库列表中显示「📡 云端」标签，与本地导入题库区分

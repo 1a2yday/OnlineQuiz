@@ -2,6 +2,7 @@ import './index.css';
 import { navigateTo, registerRoute } from './router';
 import { getCurrentUser, isBlacklisted, loadRemoteQuizzes } from './storage';
 import { initTheme } from './themes';
+import { recordVisit } from './utils';
 import { renderHomePage } from './pages/HomePage';
 import { renderNameEntry } from './pages/NameEntry';
 import { renderQuizBank } from './pages/QuizBank';
@@ -29,6 +30,9 @@ registerRoute('admin', renderAdmin);
 function bootstrap(): void {
   // 后台拉取远程题库（不阻塞页面渲染）
   loadRemoteQuizzes();
+
+  // 记录访问（服务端可用时计数，纯静态部署静默忽略）
+  recordVisit();
 
   const user = getCurrentUser();
   const isBlocked = user && isBlacklisted(user.id);

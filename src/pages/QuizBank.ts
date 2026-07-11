@@ -73,6 +73,16 @@ export function renderQuizBank(): void {
         </button>
       </div>
 
+      <!-- 随机顺序选项 -->
+      <div class="mb-3 animate-fade-in-up delay-100">
+        <label class="flex items-center gap-2 px-2 py-2 rounded-xl bg-white border border-candy-border cursor-pointer select-none hover:shadow-sm transition-shadow">
+          <input type="checkbox" id="randomize-checkbox" class="w-4 h-4 accent-candy-primary cursor-pointer"
+            ${sessionStorage.getItem('english_quiz_randomize') === 'true' ? 'checked' : ''}>
+          <span class="text-sm font-bold text-candy-text">🔄 题目出现顺序随机</span>
+          <span class="text-xs text-candy-text-muted ml-auto">勾选后每道题的出现顺序将被打乱</span>
+        </label>
+      </div>
+
       <!-- 题库列表 -->
       <div class="flex-1" id="bank-list">
         ${banksHtml}
@@ -107,6 +117,12 @@ export function renderQuizBank(): void {
 
   // 事件绑定
   document.getElementById('back-home-btn')?.addEventListener('click', () => navigateTo('home'));
+
+  // 随机顺序复选框
+  document.getElementById('randomize-checkbox')?.addEventListener('change', (e) => {
+    const checked = (e.target as HTMLInputElement).checked;
+    sessionStorage.setItem('english_quiz_randomize', checked ? 'true' : 'false');
+  });
 
   // 手动刷新云端题库
   document.getElementById('refresh-banks-btn')?.addEventListener('click', async () => {

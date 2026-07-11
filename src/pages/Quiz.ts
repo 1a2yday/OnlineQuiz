@@ -78,8 +78,12 @@ export function renderQuiz(): void {
 }
 
 function initNormalSession(questions: Question[]): void {
+  // 检查是否启用随机顺序
+  const shouldRandomize = sessionStorage.getItem('english_quiz_randomize') === 'true';
+  const finalQuestions = shouldRandomize ? shuffle([...questions]) : [...questions];
+
   session = {
-    questions: [...questions],
+    questions: finalQuestions,
     currentIndex: 0,
     answers: [],
     startTime: Date.now(),

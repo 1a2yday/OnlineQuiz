@@ -79,6 +79,51 @@ body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--
 }
 .question-item .del-btn:hover { color:var(--c-danger); }
 
+/* ===== 拖拽和序号输入 ===== */
+.drag-handle {
+  cursor: grab;
+  color: #C0B0B0;
+  font-size: 14px;
+  user-select: none;
+  flex-shrink: 0;
+  padding: 2px 4px 2px 2px;
+  letter-spacing: 2px;
+}
+.drag-handle:active { cursor: grabbing; }
+
+.seq-input {
+  width: 38px;
+  border: 1px solid #E0D0D0;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8B7070;
+  background: transparent;
+  outline: none;
+  padding: 2px;
+  -moz-appearance: textfield;
+  margin-right: 2px;
+}
+.seq-input::-webkit-outer-spin-button,
+.seq-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.seq-input:focus {
+  border-color: var(--c-editor);
+  background: #FFF;
+}
+
+.question-item.dragging {
+  opacity: 0.4;
+  border-style: dashed;
+}
+.question-item.drag-over {
+  border-color: var(--c-editor);
+  background: rgba(168,85,247,0.06);
+}
+
 .insert-btn {
   display:block; width:100%; padding:6px 10px; background:none;
   border:1px dashed var(--c-editor-border); border-radius:8px;
@@ -221,6 +266,48 @@ body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--
 .toast.success { background:var(--c-accent); }
 @keyframes popIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
+/* Preview overlay */
+.preview-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:900;
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.preview-dialog {
+  background:#fff; border-radius:16px; width:100%; max-width:700px;
+  max-height:90vh; display:flex; flex-direction:column; box-shadow:0 8px 40px rgba(0,0,0,0.2);
+}
+.preview-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 20px; border-bottom:1px solid #F0F0F0; flex-shrink:0;
+}
+.preview-header h2 { font-size:16px; color:var(--c-text); }
+.preview-header .close-btn {
+  background:none; border:none; font-size:22px; cursor:pointer; color:#A09090;
+  padding:4px; line-height:1; border-radius:6px;
+}
+.preview-header .close-btn:hover { background:#F5F0F0; color:var(--c-text); }
+.preview-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.preview-stats { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.preview-stats .stat { padding:4px 12px; font-size:12px; background:var(--c-card); border-radius:8px; border:1px solid var(--c-border); font-weight:700; }
+.preview-questions { }
+.preview-question {
+  background:var(--c-card); border:1px solid var(--c-border);
+  border-radius:12px; padding:12px 14px; margin-bottom:10px;
+}
+.preview-question .q-header { display:flex; align-items:center; gap:6px; margin-bottom:6px; font-size:13px; }
+.preview-question .q-num { font-weight:700; color:#6B5050; font-size:12px; min-width:24px; }
+.preview-question .q-text { font-size:14px; font-weight:600; color:var(--c-text); margin-bottom:6px; line-height:1.5; }
+.preview-question .q-opts { font-size:13px; color:#5A4040; padding-left:12px; line-height:1.8; }
+.preview-question .q-opts .correct { color:var(--c-success, #2EC4A7); font-weight:700; }
+.preview-question .q-opts .wrong { color:#C0C0C0; }
+.preview-question .q-answer { font-size:12px; margin-top:4px; }
+.preview-question .q-answer.correct { color:var(--c-success, #2EC4A7); }
+.preview-question .q-answer.wrong { color:#C0A000; }
+.preview-question .q-explanation { font-size:12px; color:#6B90A0; margin-top:4px; padding-top:4px; border-top:1px solid #E8E8E8; }
+.preview-question .match-pair { display:flex; gap:10px; font-size:13px; padding:3px 0; }
+.preview-question .match-pair .arrow { color:#C0B0B0; }
+.preview-question .sentence-words { font-size:13px; padding:6px 10px; background:#FFF; border-radius:6px; border:1px solid #EEE; }
+.preview-empty { text-align:center; padding:30px; color:#A09090; }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width:5px; }
 ::-webkit-scrollbar-track { background:transparent; }
@@ -245,9 +332,13 @@ body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--
     </div>
     <div class="header-actions">
       <span class="file-name" id="file-name-display"></span>
-      <button class="btn btn-outline btn-sm" onclick="handleOpen()">📂 打开 JSON</button>
-      <button class="btn btn-editor btn-sm" onclick="handleSave()">💾 下载 JSON</button>
+      <button class="btn btn-outline btn-sm" onclick="handleOpen()">📂 打开</button>
+      <button class="btn btn-editor btn-sm" onclick="handleSave()">💾 保存</button>
+      <button class="btn btn-muted btn-sm" onclick="handleSaveAs()">📥 另存为...</button>
+      <button class="btn btn-muted btn-sm" onclick="showPreview()">👁️ 预览</button>
+      <button class="btn btn-muted btn-sm" id="btn-restore" onclick="handleRestore()" style="display:none;border:1px solid #FFC107;color:#B8860B;">📦 恢复</button>
       <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
+      <button class="btn btn-muted btn-sm" onclick="clearSavedState(); showToast('已清除本地记忆', 'success')" title="清除本地保存的记忆">🗑️ 清除记忆</button>
     </div>
   </div>
 
@@ -304,6 +395,19 @@ body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--
     <button class="opt-sentence" data-type="sentence-order">📜 还原句子</button>
   </div>
 
+  <!-- Preview overlay -->
+  <div class="preview-overlay" id="preview-overlay" style="display:none;" onclick="closePreview(event)">
+    <div class="preview-dialog" onclick="event.stopPropagation()">
+      <div class="preview-header">
+        <h2 id="preview-title">📖 题库预览</h2>
+        <button class="close-btn" onclick="closePreview(event)">✕</button>
+      </div>
+      <div class="preview-body" id="preview-body">
+        <div class="preview-empty"><div class="icon" style="font-size:40px;">📭</div><p>题库为空，无法预览</p></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -313,7 +417,8 @@ const quizState = {
   questions: [],
   selectedIndex: -1,
   dirty: false,
-  currentFileName: null
+  currentFileName: null,
+  fileHandle: null
 };
 
 // 匹配编辑器临时行数据
@@ -324,6 +429,53 @@ let previewTimer = null;
 
 // 当前正在等待插入的位置
 let pendingInsertPos = -1;
+let dragSourceIndex = -1;
+
+// ========== localStorage 持久化 ==========
+const STORAGE_KEY = 'quiz-editor-state';
+
+function autoSave() {
+  try {
+    const state = {
+      name: quizState.name,
+      questions: quizState.questions,
+      selectedIndex: quizState.selectedIndex,
+      currentFileName: quizState.currentFileName,
+      savedAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    // localStorage 容量不足时静默失败
+  }
+}
+
+function loadSavedState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.questions)) return null;
+    return parsed;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearSavedState() {
+  localStorage.removeItem(STORAGE_KEY);
+  updateRestoreBtn();
+}
+
+function hasSavedState() {
+  return localStorage.getItem(STORAGE_KEY) !== null;
+}
+
+function updateRestoreBtn() {
+  const btn = document.getElementById('btn-restore');
+  if (btn) {
+    btn.style.display = hasSavedState() ? '' : 'none';
+  }
+}
 
 // ========== ID 生成 ==========
 function genId() {
@@ -398,18 +550,30 @@ function renderQuestionList() {
     const item = document.createElement('div');
     item.className = 'question-item' + (i === quizState.selectedIndex ? ' active' : '');
     item.innerHTML = `
-      <span class="seq">${i + 1}.</span>
+      <span class="drag-handle" draggable="true">⠿</span>
+      <input class="seq-input" type="number" value="${i + 1}" min="1" max="${qs.length}">
       <span class="type-badge ${getTypeBadgeClass(q.type)}" style="font-size:10px;padding:2px 7px;">${getTypeLabel(q.type)}</span>
       <span class="preview">${getPreview(q.question, 30) || '(空题目)'}</span>
       <button class="del-btn" title="删除">✕</button>
     `;
 
-    // 点击选择
+    // 点击选择（忽略手柄、序号输入框和删除按钮）
     item.addEventListener('click', (e) => {
       if (e.target.classList.contains('del-btn')) return;
+      if (e.target.classList.contains('seq-input')) return;
+      if (e.target.classList.contains('drag-handle')) return;
       quizState.selectedIndex = i;
       matchingRows = [];
       renderAll();
+    });
+
+    // 序号输入框 - change 时移动
+    const seqInput = item.querySelector('.seq-input');
+    seqInput.addEventListener('change', () => {
+      handleSeqInputChange(i, seqInput);
+    });
+    seqInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') seqInput.blur();
     });
 
     // 删除按钮
@@ -428,10 +592,63 @@ function renderQuestionList() {
       }
     });
 
+    // ==== 拖拽事件 ====
+    item.addEventListener('dragstart', (e) => {
+      // 仅当通过拖拽手柄触发
+      if (!e.target.classList.contains('drag-handle')) {
+        e.preventDefault();
+        return;
+      }
+      dragSourceIndex = i;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(i));
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      item.classList.add('drag-over');
+    });
+
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drag-over');
+    });
+
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      if (!isNaN(fromIdx) && fromIdx !== i) {
+        moveQuestion(fromIdx, i);
+      }
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      document.querySelectorAll('.question-item.drag-over').forEach(el => el.classList.remove('drag-over'));
+    });
+
     container.appendChild(item);
 
     // 题目后方插入按钮
     container.appendChild(createInsertBtn(i + 1, '在此之后插入'));
+  });
+
+  // 容器级别拖拽：拖拽到空白区域 → 移到末尾
+  container.addEventListener('dragover', (e) => {
+    if (e.target === container || e.target.closest('.empty-state')) {
+      e.preventDefault();
+    }
+  });
+  container.addEventListener('drop', (e) => {
+    if (e.target === container || e.target.closest('.empty-state')) {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+      if (!isNaN(fromIdx) && qs.length > 0) {
+        moveQuestion(fromIdx, qs.length - 1);
+      }
+    }
   });
 }
 
@@ -488,6 +705,35 @@ function insertQuestion(position, type) {
   showToast('已插入新' + getTypeLabel(type) + '题');
 }
 
+// ========== 移动与排序 ==========
+function moveQuestion(fromIdx, toIdx) {
+  if (fromIdx === toIdx) return;
+  const qs = quizState.questions;
+  const [moved] = qs.splice(fromIdx, 1);
+  const insertAt = toIdx;
+  qs.splice(insertAt, 0, moved);
+
+  quizState.selectedIndex = insertAt;
+  quizState.dirty = true;
+  matchingRows = [];
+  renderAll();
+}
+
+function handleSeqInputChange(currentIdx, input) {
+  const val = parseInt(input.value);
+  const max = quizState.questions.length;
+  if (isNaN(val) || val < 1) {
+    input.value = currentIdx + 1;
+    return;
+  }
+  const targetIdx = Math.min(val, max) - 1;
+  if (targetIdx === currentIdx) {
+    input.value = currentIdx + 1;
+    return;
+  }
+  moveQuestion(currentIdx, targetIdx);
+}
+
 function renderEditor() {
   const pane = document.getElementById('editor-pane');
   const idx = quizState.selectedIndex;
@@ -517,12 +763,12 @@ function renderEditor() {
       <span class="type-badge ${getTypeBadgeClass(q.type)}">${getTypeLabel(q.type)} — 第 ${idx + 1} 题</span>
 
       <label>题目内容</label>
-      <textarea class="question-input" id="edit-question" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
+      <textarea class="question-input" id="edit-question" rows="5" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
 
       ${typeFields}
 
       <label>💡 解析（可选）</label>
-      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" style="min-height:50px;">${escapeHtml(q.explanation || '')}</textarea>
+      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" rows="5">${escapeHtml(q.explanation || '')}</textarea>
 
       <div class="editor-actions">
         <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
@@ -671,12 +917,12 @@ function buildEditorHTML(q, idx) {
       <span class="type-badge ${getTypeBadgeClass(q.type)}">${getTypeLabel(q.type)} — 第 ${idx + 1} 题</span>
 
       <label>题目内容</label>
-      <textarea class="question-input" id="edit-question" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
+      <textarea class="question-input" id="edit-question" rows="5" oninput="onFieldChange('question', this.value)">${escapeHtml(q.question || '')}</textarea>
 
       ${typeFields}
 
       <label>💡 解析（可选）</label>
-      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" style="min-height:50px;">${escapeHtml(q.explanation || '')}</textarea>
+      <textarea id="edit-explanation" oninput="onFieldChange('explanation', this.value)" rows="5">${escapeHtml(q.explanation || '')}</textarea>
 
       <div class="editor-actions">
         <button class="btn btn-muted btn-sm" onclick="handleValidate()">✅ 验证</button>
@@ -754,6 +1000,16 @@ function updateMetrics() {
 function scheduleJSONPreview() {
   clearTimeout(previewTimer);
   previewTimer = setTimeout(updateJSONPreview, 300);
+  scheduleAutoSave();
+}
+
+// 防抖自动保存
+let saveTimer = null;
+function scheduleAutoSave() {
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    if (quizState.dirty) autoSave();
+  }, 1500);
 }
 
 function updateJSONPreview() {
@@ -793,8 +1049,27 @@ function onBankNameChange() {
 }
 
 // ========== 文件操作 ==========
-function handleOpen() {
+async function handleOpen() {
   if (quizState.dirty && !confirm('当前有未保存的修改，是否丢弃并打开新文件？')) return;
+
+  // 优先使用 File System Access API（支持直接保存回原文件）
+  if ('showOpenFilePicker' in window) {
+    try {
+      const [handle] = await window.showOpenFilePicker({
+        types: [{ description: 'JSON 题库', accept: { 'application/json': ['.json'] } }],
+        multiple: false,
+      });
+      const file = await handle.getFile();
+      const text = await file.text();
+      processLoadedFile(text, file.name, handle);
+      return;
+    } catch (err) {
+      // 用户取消选择静默处理
+      if (err.name === 'AbortError' || err.name === 'SecurityError') return;
+      // 其他错误降级到传统方式
+      console.warn('File System Access API 打开失败，降级到传统方式:', err);
+    }
+  }
   document.getElementById('file-input').click();
 }
 
@@ -805,47 +1080,56 @@ function handleFileSelect(event) {
 
   const reader = new FileReader();
   reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-
-      // 检测是否是 manifest.json
-      if (Array.isArray(data) && data.length > 0 && data[0].file) {
-        showToast('⚠️ 这是 manifest.json，请选择题库 JSON 文件', 'error');
-        return;
-      }
-
-      // 验证结构
-      if (!data.name || !Array.isArray(data.questions)) {
-        showToast('❌ JSON 格式错误：需要 name 和 questions 字段', 'error');
-        return;
-      }
-
-      // 确保每道题都有 id
-      data.questions.forEach(q => {
-        if (!q.id) q.id = genId();
-      });
-
-      quizState.name = data.name;
-      quizState.questions = data.questions;
-      quizState.selectedIndex = data.questions.length > 0 ? 0 : -1;
-      quizState.dirty = false;
-      quizState.currentFileName = file.name;
-      matchingRows = [];
-
-      document.getElementById('bank-name-input').value = quizState.name;
-      document.getElementById('file-name-display').textContent = '📄 ' + file.name;
-
-      renderAll();
-      updateJSONPreview();
-      showToast(`✅ 已加载「${data.name}」— ${data.questions.length} 道题`, 'success');
-    } catch (err) {
-      showToast('❌ JSON 解析失败：' + err.message, 'error');
-    }
+    processLoadedFile(e.target.result, file.name, null);
   };
   reader.readAsText(file);
 }
 
-function handleSave() {
+/** 处理加载的文件内容（统一入口：支持 File System Access API 和 <input> 方式） */
+function processLoadedFile(text, fileName, fileHandle) {
+  try {
+    const data = JSON.parse(text);
+
+    // 检测是否是 manifest.json
+    if (Array.isArray(data) && data.length > 0 && data[0].file) {
+      showToast('⚠️ 这是 manifest.json，请选择题库 JSON 文件', 'error');
+      return;
+    }
+
+    // 验证结构
+    if (!data.name || !Array.isArray(data.questions)) {
+      showToast('❌ JSON 格式错误：需要 name 和 questions 字段', 'error');
+      return;
+    }
+
+    // 确保每道题都有 id
+    data.questions.forEach(q => {
+      if (!q.id) q.id = genId();
+    });
+
+    quizState.name = data.name;
+    quizState.questions = data.questions;
+    quizState.selectedIndex = data.questions.length > 0 ? 0 : -1;
+    quizState.dirty = false;
+    quizState.currentFileName = fileName;
+    quizState.fileHandle = fileHandle;  // 保存文件句柄用于直接保存
+    matchingRows = [];
+
+    document.getElementById('bank-name-input').value = quizState.name;
+    document.getElementById('file-name-display').textContent = '📄 ' + fileName;
+
+    quizState.dirty = false;
+    renderAll();
+    updateJSONPreview();
+    autoSave();
+    updateRestoreBtn();
+    showToast(`✅ 已加载「${data.name}」— ${data.questions.length} 道题`, 'success');
+  } catch (err) {
+    showToast('❌ JSON 解析失败：' + err.message, 'error');
+  }
+}
+
+async function handleSave() {
   const errors = validateAll();
   if (errors.length > 0) {
     showValidationErrors(errors);
@@ -854,6 +1138,73 @@ function handleSave() {
   }
 
   const output = { name: quizState.name, questions: quizState.questions };
+  const json = JSON.stringify(output, null, 2);
+
+  // 有文件句柄时直接写入原文件
+  if (quizState.fileHandle) {
+    try {
+      const writable = await quizState.fileHandle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      quizState.dirty = false;
+      updateMetrics();
+      autoSave();
+      updateRestoreBtn();
+      showToast('✅ 已保存到文件', 'success');
+      return;
+    } catch (err) {
+      showToast('⚠️ 直接保存失败: ' + err.message + '，尝试另存为...', 'error');
+      // 降级到另存为
+    }
+  }
+
+  // 没有句柄或写入失败 → 下载
+  downloadJSON(output);
+}
+
+async function handleSaveAs() {
+  const errors = validateAll();
+  if (errors.length > 0) {
+    showValidationErrors(errors);
+    showToast(`❌ 验证失败：${errors.length} 个错误`, 'error');
+    return;
+  }
+
+  const output = { name: quizState.name, questions: quizState.questions };
+  const json = JSON.stringify(output, null, 2);
+
+  // 尝试使用 File System Access API 保存到指定位置
+  if ('showSaveFilePicker' in window) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: quizState.currentFileName || 'quiz_' + Date.now().toString(36) + '.json',
+        types: [{ description: 'JSON 题库', accept: { 'application/json': ['.json'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(json);
+      await writable.close();
+
+      quizState.dirty = false;
+      quizState.currentFileName = handle.name;
+      quizState.fileHandle = handle;
+      document.getElementById('file-name-display').textContent = '📄 ' + handle.name;
+      updateMetrics();
+      autoSave();
+      updateRestoreBtn();
+      showToast('✅ 已保存到 ' + handle.name, 'success');
+      return;
+    } catch (err) {
+      if (err.name === 'AbortError') return; // 用户取消
+      showToast('⚠️ 保存失败: ' + err.message + '，尝试下载...', 'error');
+    }
+  }
+
+  // 降级到下载
+  downloadJSON(output);
+}
+
+/** 下载 JSON 文件（兜底方案） */
+function downloadJSON(output) {
   const json = JSON.stringify(output, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -867,9 +1218,12 @@ function handleSave() {
 
   quizState.dirty = false;
   quizState.currentFileName = filename;
+  quizState.fileHandle = null; // 下载的文件没有句柄
   document.getElementById('file-name-display').textContent = '📄 ' + filename;
   updateMetrics();
-  showToast('✅ 题库已下载 → 放入 public/quizzes/ 目录', 'success');
+  autoSave();
+  updateRestoreBtn();
+  showToast('✅ 题库已下载', 'success');
 }
 
 // ========== 验证 ==========
@@ -1034,12 +1388,146 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ========== 恢复历史状态 ==========
+function handleRestore() {
+  const saved = loadSavedState();
+  if (!saved) {
+    showToast('没有找到保存的记忆', 'error');
+    return;
+  }
+  if (quizState.dirty && !confirm('当前有未保存的修改，是否丢弃并恢复保存的状态？')) return;
+
+  quizState.name = saved.name || '未命名题库';
+  quizState.questions = saved.questions || [];
+  quizState.selectedIndex = saved.selectedIndex >= 0 && saved.selectedIndex < saved.questions.length
+    ? saved.selectedIndex : (saved.questions.length > 0 ? 0 : -1);
+  quizState.currentFileName = saved.currentFileName || null;
+  quizState.fileHandle = null; // 恢复状态时无法保留文件句柄
+  quizState.dirty = false;
+  matchingRows = [];
+
+  document.getElementById('bank-name-input').value = quizState.name;
+  if (saved.currentFileName) {
+    document.getElementById('file-name-display').textContent = '📄 ' + saved.currentFileName;
+  } else {
+    document.getElementById('file-name-display').textContent = '';
+  }
+  updateRestoreBtn();
+  renderAll();
+  updateJSONPreview();
+  showToast(`📦 已恢复上次编辑：${quizState.name}（${quizState.questions.length} 题）`, 'success');
+}
+
+// ========== 题库预览 ==========
+function showPreview() {
+  const qs = quizState.questions;
+  if (!qs || qs.length === 0) {
+    showToast('⚠️ 题库为空，无法预览', 'error');
+    return;
+  }
+
+  const overlay = document.getElementById('preview-overlay');
+  const body = document.getElementById('preview-body');
+
+  document.getElementById('preview-title').textContent = `📖 ${quizState.name || '未命名题库'}`;
+
+  // 统计
+  const typeCounts = {};
+  qs.forEach(q => { typeCounts[q.type] = (typeCounts[q.type] || 0) + 1; });
+  let statsHtml = Object.entries(typeCounts).map(([k, v]) => {
+    const label = { 'single-choice': '单选', 'matching': '消消乐', 'sentence-order': '还原句子' }[k] || k;
+    return `<span class="stat" style="border-left:3px solid var(--c-editor);">${label} ${v}题</span>`;
+  }).join('');
+  statsHtml += `<span class="stat" style="border-left:3px solid var(--c-primary);">共 ${qs.length} 题</span>`;
+
+  // 题目列表
+  const questionsHtml = qs.map((question, qi) => {
+    const num = qi + 1;
+    let detailHtml = '';
+
+    if (question.type === 'single-choice') {
+      const labels = ['A', 'B', 'C', 'D'];
+      detailHtml = `<div class="q-opts">${
+        (question.options || []).map((opt, oi) => {
+          const isCorrect = oi === question.answer;
+          return `<div class="${isCorrect ? 'correct' : 'wrong'}">${labels[oi]}. ${escapeHtml(opt)} ${isCorrect ? '✓' : ''}</div>`;
+        }).join('')
+      }</div>`;
+    } else if (question.type === 'matching') {
+      const left = question.left || [];
+      const right = question.right || [];
+      const pairs = question.pairs || [];
+      detailHtml = `<div style="padding-left:12px;">${
+        pairs.map(([li, ri]) =>
+          `<div class="match-pair"><span>${escapeHtml(left[li] || '')}</span><span class="arrow">↔</span><span>${escapeHtml(right[ri] || '')}</span></div>`
+        ).join('')
+      }</div>`;
+    } else if (question.type === 'sentence-order') {
+      const words = question.words || [];
+      detailHtml = `<div class="sentence-words">${words.map((w, wi) => {
+        const correctIdx = (question.answer || [])[wi];
+        const isMatch = correctIdx === wi;
+        return `<span style="display:inline-block;padding:2px 8px;margin:2px;background:${isMatch ? '#E8F8F4' : '#FFF0F0'};border-radius:4px;font-size:13px;">${escapeHtml(w)}${!isMatch ? ` (→${correctIdx+1})` : ''}</span>`;
+      }).join(' ')}</div>`;
+    }
+
+    const typeLabel = { 'single-choice': '单选', 'matching': '消消乐', 'sentence-order': '还原句子' }[question.type] || '?';
+    const typeCls = question.type === 'single-choice' ? 'single' : question.type === 'matching' ? 'matching' : 'sentence';
+    const explHtml = question.explanation
+      ? `<div class="q-explanation">💡 ${escapeHtml(question.explanation)}</div>` : '';
+
+    return `
+      <div class="preview-question">
+        <div class="q-header">
+          <span class="q-num">#${num}</span>
+          <span class="type-badge ${typeCls}">${typeLabel}</span>
+        </div>
+        <div class="q-text">${escapeHtml(question.question || '(无题目内容)')}</div>
+        ${detailHtml}
+        ${explHtml}
+      </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="preview-stats">${statsHtml}</div>
+    <div class="preview-questions">${questionsHtml}</div>`;
+
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreview(event) {
+  if (event && event.target !== event.currentTarget) return;
+  document.getElementById('preview-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
 // ========== 初始化 ==========
 (function init() {
-  document.getElementById('bank-name-input').value = quizState.name;
+  // 检查是否有保存的状态
+  const saved = loadSavedState();
+  if (saved) {
+    quizState.name = saved.name || '未命名题库';
+    quizState.questions = saved.questions || [];
+    quizState.selectedIndex = saved.selectedIndex >= 0 && saved.selectedIndex < saved.questions.length
+      ? saved.selectedIndex : (saved.questions.length > 0 ? 0 : -1);
+    quizState.currentFileName = saved.currentFileName || null;
+    quizState.dirty = false;
+
+    document.getElementById('bank-name-input').value = quizState.name;
+    if (saved.currentFileName) {
+      document.getElementById('file-name-display').textContent = '📄 ' + saved.currentFileName;
+    }
+  } else {
+    document.getElementById('bank-name-input').value = quizState.name;
+  }
+  updateRestoreBtn();
   renderAll();
   updateJSONPreview();
   updateMetrics();
+  if (saved) {
+    showToast(`📦 已自动恢复上次编辑状态 — ${saved.questions.length} 题`, 'success');
+  }
 })();
 </script>
 </body>

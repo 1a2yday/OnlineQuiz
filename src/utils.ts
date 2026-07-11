@@ -194,3 +194,35 @@ export function setAdminUser(userId: string, isAdmin: boolean): void {
     // ignore
   }
 }
+
+// ========== 访问计数器 API ==========
+
+interface VisitStats {
+  total: number;
+  today: number;
+}
+
+/**
+ * 记录一次网站访问（每次页面加载时调用）
+ * 服务器端会按 IP+小时 去重
+ */
+export async function recordVisit(): Promise<void> {
+  try {
+    await fetch('/api/visits', { method: 'POST' });
+  } catch {
+    // 静默处理：服务不可用时（如纯静态部署）不影响用户
+  }
+}
+
+/**
+ * 获取网站访问统计数据（管理面板使用）
+ */
+export async function fetchVisitStats(): Promise<VisitStats | null> {
+  try {
+    const res = await fetch('/api/visits');
+    if (!res.ok) return null;
+    return await res.json() as VisitStats;
+  } catch {
+    return null;
+  }
+}
