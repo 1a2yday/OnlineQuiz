@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>题库管理器 — 英语刷题助手</title>
+<style>
+:root {
+  --c-primary: #FF8C42;
+  --c-bg: #FFF8F0;
+  --c-text: #4A3030;
+  --c-border: #FFE0D0;
+  --c-card: #FFF;
+  --c-accent: #2EC4A7;
+  --c-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --c-editor: #A855F7;
+  --c-editor-bg: #FAF5FF;
+  --c-editor-border: #E8D8FF;
+  --c-danger: #E04060;
+  --c-success: #2EC4A7;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--c-bg); color:var(--c-text); line-height:1.6; min-height:100vh; }
+.container { max-width:1000px; margin:0 auto; padding:16px; }
+
+/* Header */
+.header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+.header h1 { font-size:1.4em; white-space:nowrap; }
+.header .subtitle { color:#8B7070; font-size:0.85em; }
+.header-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; gap:5px; padding:9px 18px; border-radius:10px; font-weight:700; font-size:14px; border:none; cursor:pointer; transition:all .2s; }
+.btn-primary { background:var(--c-primary); color:#fff; } .btn-primary:hover { filter:brightness(1.1); }
+.btn-editor { background:var(--c-editor); color:#fff; } .btn-editor:hover { filter:brightness(1.1); }
+.btn-accent { background:var(--c-accent); color:#fff; } .btn-accent:hover { filter:brightness(1.1); }
+.btn-danger { background:var(--c-danger); color:#fff; } .btn-danger:hover { filter:brightness(1.1); }
+.btn-outline { background:#fff; color:var(--c-editor); border:2px solid var(--c-editor); } .btn-outline:hover { background:var(--c-editor-bg); }
+.btn-muted { background:#F0F0F0; color:#707070; } .btn-muted:hover { background:#E0E0E0; }
+.btn-ghost { background:transparent; color:#8B7070; padding:6px 12px; } .btn-ghost:hover { background:#F5F0F0; }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn-xs { padding:3px 8px; font-size:11px; }
+.btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* Directory status */
+.dir-status { display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:10px; margin-bottom:12px; font-size:13px; }
+.dir-status.loaded { background:#E8F8F4; border:1px solid #B8E8DC; color:#1A7A64; }
+.dir-status.empty { background:#FFF8F0; border:1px solid #FFE0D0; color:#A07050; }
+.dir-status .path { font-family:monospace; font-size:12px; opacity:0.8; }
+
+/* Stats bar */
+.stats-bar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+.stat { background:var(--c-card); border-radius:8px; padding:6px 14px; border:1px solid var(--c-border); font-weight:700; font-size:13px; }
+.stat.enabled { border-left:3px solid var(--c-success); }
+.stat.disabled { border-left:3px solid #C0C0C0; }
+.stat.total { border-left:3px solid var(--c-editor); }
+
+/* Table */
+.table-wrap { background:var(--c-card); border-radius:14px; border:1px solid var(--c-border); overflow:hidden; box-shadow:var(--c-shadow); }
+table { width:100%; border-collapse:collapse; }
+thead { background:var(--c-editor-bg); }
+th { padding:10px 12px; text-align:left; font-size:12px; font-weight:700; color:#6B50A0; white-space:nowrap; }
+th:last-child { text-align:center; width:60px; }
+td { padding:10px 12px; border-bottom:1px solid #F5F0F0; font-size:13px; vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#FFFAF5; }
+tr.disabled td { opacity:0.55; }
+tr.dragging td { opacity:0.35; }
+tr.drag-over td { border-bottom:2px solid var(--c-editor); background:rgba(168,85,247,0.04); }
+
+/* Drag handle */
+.drag-handle {
+  cursor: grab; color:#D0C0C0; font-size:14px; user-select:none;
+  padding:4px; line-height:1; display:inline-block; letter-spacing:1px;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* Toggle switch */
+.toggle { position:relative; display:inline-block; width:38px; height:20px; flex-shrink:0; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle .slider { position:absolute; cursor:pointer; inset:0; background:#D0C0C0; border-radius:20px; transition:.2s; }
+.toggle .slider::before { content:''; position:absolute; height:16px; width:16px; left:2px; bottom:2px; background:#fff; border-radius:50%; transition:.2s; }
+.toggle input:checked + .slider { background:var(--c-success); }
+.toggle input:checked + .slider::before { transform:translateX(18px); }
+
+/* File name cell */
+.file-cell { font-family:monospace; font-size:11px; color:#8B7070; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* Type badges */
+.type-badge { display:inline-block; padding:2px 8px; border-radius:20px; font-weight:700; font-size:11px; margin-right:3px; }
+.type-badge.single { background:#FFE0D0; color:#D06030; }
+.type-badge.matching { background:#E0D0FF; color:#7040B0; }
+.type-badge.sentence { background:#D0F0E8; color:#208060; }
+
+/* Empty state */
+.empty-state { text-align:center; padding:50px 20px; color:#A09090; }
+.empty-state .icon { font-size:48px; margin-bottom:8px; }
+.empty-state p { font-size:14px; line-height:2; }
+
+/* Toast */
+.toast { position:fixed; top:20px; right:20px; color:#fff; padding:12px 20px; border-radius:10px; font-weight:700; z-index:999; animation:popIn .3s ease; }
+.toast.success { background:var(--c-success); }
+.toast.error { background:var(--c-danger); }
+.toast.info { background:var(--c-editor); }
+@keyframes popIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* Delete confirm overlay */
+.del-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:900;
+  display:flex; align-items:center; justify-content:center; animation:fadeIn .2s;
+}
+.del-dialog { background:#fff; border-radius:14px; padding:24px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+.del-dialog h3 { margin-bottom:8px; }
+.del-dialog p { font-size:13px; color:#6B5050; margin-bottom:16px; line-height:1.6; }
+.del-dialog .actions { display:flex; gap:8px; justify-content:flex-end; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#D0C0C0; border-radius:10px; }
+
+/* Mode badge */
+.mode-badge { font-size:11px; padding:2px 8px; border-radius:10px; font-weight:700; }
+.mode-badge.api { background:#E0D0FF; color:#7040B0; }
+.mode-badge.fallback { background:#FFE0D0; color:#D06030; }
+
+/* Help section */
+.help-box {
+  background:var(--c-editor-bg); border:1px solid var(--c-editor-border);
+  border-radius:14px; padding:14px 18px; font-size:13px; line-height:1.8; margin-top:12px;
+}
+.help-box code { background:rgba(168,85,247,0.1); padding:2px 6px; border-radius:4px; font-size:12px; }
+.help-box ol { margin-left:18px; }
+.help-box ol li { margin-bottom:4px; }
+
+/* Loading spinner */
+.loading { display:inline-block; width:16px; height:16px; border:2px solid rgba(168,85,247,0.2); border-top-color:var(--c-editor); border-radius:50%; animation:spin .6s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* Preview overlay */
+.preview-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:900;
+  display:flex; align-items:center; justify-content:center; animation:fadeIn .2s;
+  padding:20px;
+}
+.preview-dialog {
+  background:#fff; border-radius:14px; width:95%; max-width:680px; max-height:85vh;
+  display:flex; flex-direction:column; box-shadow:0 8px 32px rgba(0,0,0,0.2);
+  overflow:hidden;
+}
+.preview-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid #F0F0F0; flex-shrink:0;
+}
+.preview-header h2 { font-size:16px; }
+.preview-header .close-btn { background:none; border:none; font-size:22px; cursor:pointer; color:#A09090; padding:4px; line-height:1; border-radius:6px; }
+.preview-header .close-btn:hover { background:#F5F0F0; color:var(--c-text); }
+.preview-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.preview-stats { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.preview-stats .stat { padding:4px 12px; font-size:12px; }
+.preview-questions { }
+.preview-question {
+  background:#FAFAFA; border-radius:10px; padding:12px 14px; margin-bottom:8px;
+  border:1px solid #F0F0F0;
+}
+.preview-question .q-header { display:flex; align-items:center; gap:6px; margin-bottom:6px; font-size:13px; }
+.preview-question .q-num { font-weight:700; color:#6B5050; font-size:12px; min-width:24px; }
+.preview-question .q-text { font-size:14px; font-weight:600; color:var(--c-text); margin-bottom:6px; line-height:1.5; }
+.preview-question .q-opts { font-size:13px; color:#5A4040; padding-left:12px; line-height:1.8; }
+.preview-question .q-opts .correct { color:var(--c-success); font-weight:700; }
+.preview-question .q-opts .wrong { color:#C0C0C0; }
+.preview-question .q-answer { font-size:12px; margin-top:4px; }
+.preview-question .q-answer.correct { color:var(--c-success); }
+.preview-question .q-answer.wrong { color:#C0A000; }
+.preview-question .q-explanation { font-size:12px; color:#6B90A0; margin-top:4px; padding-top:4px; border-top:1px solid #E8E8E8; }
+.preview-question .match-pair { display:flex; gap:10px; font-size:13px; padding:3px 0; }
+.preview-question .match-pair .arrow { color:#C0B0B0; }
+.preview-question .sentence-words { font-size:13px; padding:6px 10px; background:#FFF; border-radius:6px; border:1px solid #EEE; }
+.preview-empty { text-align:center; padding:30px; color:#A09090; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>🗂️ 题库管理器</h1>
+      <span class="subtitle">管理 public/quizzes/ 中的题库 — 启用/禁用/删除</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-editor btn-sm" onclick="openDirectory()" id="btn-open">📂 打开目录</button>
+      <button class="btn btn-accent btn-sm" onclick="saveChanges()" id="btn-save" disabled>💾 保存修改</button>
+      <button class="btn btn-muted btn-sm" onclick="loadFallback()" id="btn-fallback">📄 手动加载</button>
+      <button class="btn btn-muted btn-sm" onclick="forgetDirectory()" id="btn-forget" style="display:none;">🔒 忘记目录</button>
+    </div>
+  </div>
+
+  <!-- Directory status -->
+  <div class="dir-status empty" id="dir-status">
+    <span>📭</span>
+    <span>尚未打开目录 — 点击「打开目录」选择 <code>public/quizzes/</code> 文件夹</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="stats-bar">
+    <span class="stat total" id="stat-total">📦 总计：0</span>
+    <span class="stat enabled" id="stat-enabled">✅ 已启用：0</span>
+    <span class="stat disabled" id="stat-disabled">⏸️ 已禁用：0</span>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap" id="table-wrap">
+    <div class="empty-state" id="empty-state">
+      <div class="icon">📂</div>
+      <p>点击「打开目录」选择 <b>public/quizzes/</b> 文件夹<br>
+      <span style="font-size:13px;color:#B09090;">或点击「手动加载」上传 JSON 文件</span></p>
+    </div>
+    <div id="table-area" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #F0F0F0;">
+        <span style="font-size:12px;color:#8B7070;" id="table-summary"></span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-ghost btn-xs" onclick="setAllEnabled(true)">✅ 全部启用</button>
+          <button class="btn btn-ghost btn-xs" onclick="setAllEnabled(false)">⏸️ 全部禁用</button>
+          <button class="btn btn-ghost btn-xs" onclick="refreshDirectory()" style="color:var(--c-editor);">🔄 刷新</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28px;text-align:center;padding:10px 4px;" title="拖拽排序">⠿</th>
+            <th style="width:50px;">启用</th>
+            <th>题库名称</th>
+            <th style="width:90px;">题型</th>
+            <th style="width:60px;text-align:center;">题目数</th>
+            <th style="width:170px;">文件名</th>
+            <th style="width:50px;text-align:center;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="quiz-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Hidden file input for fallback -->
+  <input type="file" id="file-input" accept=".json" multiple style="display:none" onchange="handleFallbackFiles(event)">
+
+  <!-- Preview overlay -->
+  <div class="preview-overlay" id="preview-overlay" style="display:none;" onclick="closePreview(event)">
+    <div class="preview-dialog" onclick="event.stopPropagation()">
+      <div class="preview-header">
+        <h2 id="preview-title">📖 题库预览</h2>
+        <button class="close-btn" onclick="closePreview()">&times;</button>
+      </div>
+      <div class="preview-body" id="preview-body"></div>
+    </div>
+  </div>
+
+  <!-- Help -->
+  <div class="help-box">
+    <strong>💡 使用说明</strong>
+    <ol>
+      <li>点击「打开目录」选择项目中的 <code>public/quizzes/</code> 文件夹</li>
+      <li>列表中会显示所有 JSON 题库文件 — 已注册到 <code>manifest.json</code> 的为启用状态</li>
+      <li>拖拽行首的 <strong>⠿</strong> 手柄可调整题库显示顺序</li>
+      <li>拨动开关可启用/禁用题库（控制是否出现在 <code>manifest.json</code> 中）</li>
+      <li>点击 🗑️ 可删除题库文件（删除前会要求确认，并自动备份）</li>
+      <li>修改完成后点击「💾 保存修改」— 将写入 <code>manifest.json</code> 并处理删除</li>
+      <li>⚠️ 删除操作不可撤销，建议先下载备份</li>
+    </ol>
+    <p style="margin-top:6px;font-size:12px;color:#8B7070;">
+      ⚡ 使用 File System Access API（Chrome/Edge 支持），不支持时自动回退到手动模式。
+    </p>
+  </div>
+
+</div>
+
+<script>
+// ===== 全局状态 =====
+const state = {
+  dirHandle: null,           // FileSystemDirectoryHandle
+  quizzes: [],               // { id, name, file, description, enabled, data, questions }
+  changed: false,            // 是否有未保存的修改
+  deletedFiles: [],          // 待删除的文件名列表
+  mode: 'idle',              // 'api' | 'fallback' | 'idle'
+};
+
+// ===== IndexedDB 持久化目录句柄 =====
+const DB_NAME = 'quiz-manager-store';
+const STORE_NAME = 'handles';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => { req.result.createObjectStore(STORE_NAME); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveDirectoryHandle(handle) {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put(handle, 'dirHandle');
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
+    });
+  } catch { /* IndexedDB 不可用时静默忽略 */ }
+}
+
+async function loadDirectoryHandle() {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const req = tx.objectStore(STORE_NAME).get('dirHandle');
+      req.onsuccess = () => { db.close(); resolve(req.result); };
+      req.onerror = () => { db.close(); reject(req.error); };
+    });
+  } catch { return null; }
+}
+
+async function clearDirectoryHandle() {
+  try {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).delete('dirHandle');
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onerror = () => { db.close(); reject(tx.error); };
+    });
+  } catch { /* 静默忽略 */ }
+}
+
+// ===== Toast =====
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  t.className = 'toast ' + (type || 'info');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== 解析题库 =====
+function parseQuizFile(filename, jsonStr) {
+  try {
+    const data = JSON.parse(jsonStr);
+    if (!data.name || !Array.isArray(data.questions)) return null;
+    return data;
+  } catch { return null; }
+}
+
+function analyzeQuestions(questions) {
+  const types = {};
+  questions.forEach(q => {
+    const t = q.type || 'unknown';
+    types[t] = (types[t] || 0) + 1;
+  });
+  return types;
+}
+
+function typeSummary(types) {
+  const labels = { 'single-choice': '单选', 'matching': '消消乐', 'sentence-order': '还原句子' };
+  return Object.entries(types).map(([k, v]) => {
+    const l = labels[k] || k;
+    return `<span class="type-badge ${k === 'single-choice' ? 'single' : k === 'matching' ? 'matching' : 'sentence'}">${l} ${v}</span>`;
+  }).join('');
+}
+
+function generateId(name) {
+  return name.replace(/[^a-zA-Z0-9一-鿿]/g, '').slice(0, 20) || 'quiz_' + Date.now().toString(36);
+}
+
+// ===== 核心：读取目录 =====
+async function openDirectory() {
+  if (!('showDirectoryPicker' in window)) {
+    showToast('⚠️ 当前浏览器不支持目录 API，将使用手动模式', 'error');
+    loadFallback();
+    return;
+  }
+
+  try {
+    // 尝试从 IndexedDB 恢复上次打开的目录句柄，作为起始目录
+    let startIn;
+    try {
+      const saved = await loadDirectoryHandle();
+      if (saved) startIn = saved;
+    } catch {}
+
+    const handle = await window.showDirectoryPicker({ mode: 'readwrite', startIn });
+    state.dirHandle = handle;
+    state.mode = 'api';
+    await loadFromDirectory(handle);
+  } catch (e) {
+    if (e.name === 'AbortError' || e.name === 'SecurityError') return;
+    showToast('❌ 打开目录失败：' + e.message, 'error');
+  }
+}
+
+async function loadFromDirectory(handle) {
+  const btn = document.getElementById('btn-open');
+  btn.innerHTML = '<span class="loading"></span> 读取中…';
+  btn.disabled = true;
+
+  try {
+    // 读取所有条目
+    const entries = [];
+    for await (const entry of handle.values()) {
+      entries.push(entry);
+    }
+
+    // 读取 manifest.json
+    let manifest = [];
+    try {
+      const mf = await handle.getFileHandle('manifest.json');
+      const mfFile = await mf.getFile();
+      const text = await mfFile.text();
+      manifest = JSON.parse(text);
+      if (!Array.isArray(manifest)) manifest = [];
+    } catch { /* manifest 可能不存在 */ }
+
+    // 读取所有 .json 文件
+    const jsonFiles = entries.filter(e => e.kind === 'file' && e.name.endsWith('.json') && e.name !== 'manifest.json');
+
+    const quizzes = [];
+    for (const entry of jsonFiles) {
+      try {
+        const file = await entry.getFile();
+        const text = await file.text();
+        const data = parseQuizFile(entry.name, text);
+        if (!data) {
+          quizzes.push({
+            id: generateId(entry.name),
+            name: entry.name,
+            file: entry.name,
+            description: '',
+            enabled: false,
+            data: null,
+            questions: 0,
+            types: {},
+            error: '解析失败'
+          });
+          continue;
+        }
+        const manEntry = manifest.find(m => m.file === entry.name);
+        quizzes.push({
+          id: manEntry?.id || generateId(data.name),
+          name: data.name,
+          file: entry.name,
+          description: manEntry?.description || data.name,
+          enabled: !!manEntry,
+          data: data,
+          questions: data.questions.length,
+          types: analyzeQuestions(data.questions),
+          error: null
+        });
+      } catch (e) {
+        quizzes.push({
+          id: generateId(entry.name),
+          name: entry.name,
+          file: entry.name,
+          description: '',
+          enabled: false,
+          data: null,
+          questions: 0,
+          types: {},
+          error: '读取失败: ' + e.message
+        });
+      }
+    }
+
+    // 检查 manifest 中引用但不在目录中的文件
+    manifest.forEach(m => {
+      if (m.file && !quizzes.find(q => q.file === m.file)) {
+        quizzes.push({
+          id: m.id,
+          name: m.name + ' (文件缺失)',
+          file: m.file,
+          description: m.description || '',
+          enabled: true,
+          data: null,
+          questions: 0,
+          types: {},
+          error: '文件不存在',
+          missing: true
+        });
+      }
+    });
+
+    state.quizzes = quizzes;
+    state.changed = false;
+    state.deletedFiles = [];
+    renderTable();
+    updateStatus(`📂 已打开目录 — ${quizzes.length} 个题库文件`);
+    // 保存句柄，下次自动恢复
+    saveDirectoryHandle(handle).catch(() => {});
+    document.getElementById('btn-forget').style.display = '';
+    showToast(`✅ 已加载 ${quizzes.length} 个题库`, 'success');
+  } catch (e) {
+    showToast('❌ 读取目录失败：' + e.message, 'error');
+  } finally {
+    btn.innerHTML = '📂 打开目录';
+    btn.disabled = false;
+  }
+}
+
+// ===== 手动加载（回退模式） =====
+function loadFallback() {
+  document.getElementById('file-input').click();
+}
+
+async function handleFallbackFiles(event) {
+  const files = event.target.files;
+  if (!files || files.length === 0) return;
+  event.target.value = '';
+
+  // 分离 manifest.json 和其他文件
+  const others = [];
+  let manifestText = null;
+  for (const f of files) {
+    if (f.name === 'manifest.json') {
+      manifestText = await f.text();
+    } else {
+      others.push(f);
+    }
+  }
+
+  let manifest = [];
+  if (manifestText) {
+    try { manifest = JSON.parse(manifestText); if (!Array.isArray(manifest)) manifest = []; }
+    catch { showToast('⚠️ manifest.json 格式错误', 'error'); }
+  }
+
+  const quizzes = [];
+  for (const f of others) {
+    const text = await f.text();
+    const data = parseQuizFile(f.name, text);
+    if (!data) {
+      quizzes.push({
+        id: generateId(f.name), name: f.name, file: f.name, description: '',
+        enabled: false, data: null, questions: 0, types: {}, error: '解析失败'
+      });
+      continue;
+    }
+    const manEntry = manifest.find(m => m.file === f.name);
+    quizzes.push({
+      id: manEntry?.id || generateId(data.name),
+      name: data.name, file: f.name, description: manEntry?.description || data.name,
+      enabled: !!manEntry, data: data, questions: data.questions.length,
+      types: analyzeQuestions(data.questions), error: null
+    });
+  }
+
+  state.quizzes = quizzes;
+  state.mode = 'fallback';
+  state.changed = false;
+  state.deletedFiles = [];
+  renderTable();
+  updateStatus(`📄 已加载 ${quizzes.length} 个文件（手动模式，无法保存到目录）`);
+  showToast(`✅ 已加载 ${quizzes.length} 个题库`, 'success');
+}
+
+// ===== 渲染表格 =====
+function renderTable() {
+  const tbody = document.getElementById('quiz-tbody');
+  const emptyState = document.getElementById('empty-state');
+  const tableArea = document.getElementById('table-area');
+  const summary = document.getElementById('table-summary');
+
+  if (state.quizzes.length === 0) {
+    emptyState.style.display = '';
+    tableArea.style.display = 'none';
+    updateStats();
+    return;
+  }
+
+  emptyState.style.display = 'none';
+  tableArea.style.display = '';
+
+  const total = state.quizzes.length;
+  const enabled = state.quizzes.filter(q => q.enabled).length;
+  summary.textContent = `共 ${total} 个题库，${enabled} 个已启用`;
+
+  tbody.innerHTML = state.quizzes.map((q, i) => {
+    const isDisabled = !q.enabled;
+    return `
+    <tr class="${isDisabled ? 'disabled' : ''}" data-index="${i}" draggable="true">
+      <td style="text-align:center;padding:10px 4px;">
+        <span class="drag-handle" draggable="true">⠿</span>
+      </td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${q.enabled ? 'checked' : ''} onchange="toggleQuiz(${i}, this.checked)">
+          <span class="slider"></span>
+        </label>
+      </td>
+      <td>
+        <strong style="font-size:14px;cursor:pointer;" onclick="showPreview(${i})" title="点击预览题库内容">${escapeHtml(q.name)}</strong>
+        <span style="font-size:11px;color:var(--c-editor);cursor:pointer;margin-left:4px;" onclick="showPreview(${i})" title="预览">👁️</span>
+        <span style="font-size:11px;color:#8B7070;cursor:pointer;margin-left:2px;" onclick="editQuizName(${i})" title="修改题库名称">✏️</span>
+        ${q.error ? `<br><span style="color:var(--c-danger);font-size:11px;">⚠️ ${escapeHtml(q.error)}</span>` : ''}
+        ${q.missing ? `<br><span style="color:#C0A000;font-size:11px;">⚠️ 文件不在目录中</span>` : ''}
+      </td>
+      <td>${q.data ? typeSummary(q.types) : '<span style="color:#C0C0C0;">—</span>'}</td>
+      <td style="text-align:center;font-weight:700;">${q.questions || '—'}</td>
+      <td>
+        <span class="file-cell" title="${escapeHtml(q.file)}">${escapeHtml(q.file)}</span>
+      </td>
+      <td style="text-align:center;">
+        <button class="btn btn-ghost btn-xs" onclick="editQuizName(${i})" style="color:#8B7070;" title="修改题库名称">✏️</button>
+        <button class="btn btn-ghost btn-xs" onclick="confirmDelete(${i})" style="color:var(--c-danger);" title="删除此题库文件">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateStats();
+  updateSaveButton();
+}
+
+function escapeHtml(str) {
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;' };
+  return String(str).replace(/[&<>"']/g, ch => map[ch] || ch);
+}
+
+// ===== 拖拽排序 =====
+let dragSourceIndex = -1;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const tbody = document.getElementById('quiz-tbody');
+  if (!tbody) return;
+
+  tbody.addEventListener('dragstart', (e) => {
+    const handle = e.target.closest('.drag-handle');
+    if (!handle) { e.preventDefault(); return; }
+    const tr = handle.closest('tr');
+    if (!tr) { e.preventDefault(); return; }
+    dragSourceIndex = parseInt(tr.dataset.index);
+    tr.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(dragSourceIndex));
+  });
+
+  tbody.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const tr = e.target.closest('tr');
+    if (tr && parseInt(tr.dataset.index) !== dragSourceIndex) {
+      tr.classList.add('drag-over');
+    }
+  });
+
+  tbody.addEventListener('dragleave', (e) => {
+    const tr = e.target.closest('tr');
+    if (tr) tr.classList.remove('drag-over');
+  });
+
+  tbody.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const tr = e.target.closest('tr');
+    if (!tr) return;
+    const toIdx = parseInt(tr.dataset.index);
+    if (!isNaN(dragSourceIndex) && !isNaN(toIdx) && dragSourceIndex !== toIdx) {
+      moveQuiz(dragSourceIndex, toIdx);
+    }
+  });
+
+  tbody.addEventListener('dragend', () => {
+    dragSourceIndex = -1;
+    tbody.querySelectorAll('tr.dragging, tr.drag-over').forEach(el => {
+      el.classList.remove('dragging', 'drag-over');
+    });
+  });
+});
+
+function moveQuiz(fromIdx, toIdx) {
+  if (fromIdx === toIdx) return;
+  const qs = state.quizzes;
+  const [moved] = qs.splice(fromIdx, 1);
+  qs.splice(toIdx, 0, moved);
+  state.changed = true;
+  renderTable();
+}
+
+// ===== 交互 =====
+function toggleQuiz(index, enabled) {
+  if (index < 0 || index >= state.quizzes.length) return;
+  state.quizzes[index].enabled = enabled;
+  state.changed = true;
+  renderTable();
+}
+
+function setAllEnabled(enabled) {
+  state.quizzes.forEach(q => { if (!q.missing) q.enabled = enabled; });
+  state.changed = true;
+  renderTable();
+}
+
+function confirmDelete(index) {
+  const q = state.quizzes[index];
+  if (!q) return;
+
+  if (q.missing) {
+    // 缺失文件 — 只需从 manifest 移除
+    if (!confirm(`确定从 manifest 中移除「${q.name}」吗？\n文件已不存在，仅清理 manifest 记录。`)) return;
+    doDelete(index);
+    return;
+  }
+
+  // 检查是否正在使用 File System API
+  if (state.mode !== 'api' || !state.dirHandle) {
+    showToast('⚠️ 手动模式下无法删除文件，请在文件管理器中手动删除', 'error');
+    return;
+  }
+
+  // 显示确认弹窗
+  const overlay = document.createElement('div');
+  overlay.className = 'del-overlay';
+  overlay.innerHTML = `
+    <div class="del-dialog">
+      <h3>🗑️ 确认删除</h3>
+      <p>
+        <strong>${escapeHtml(q.name)}</strong><br>
+        文件：<code>${escapeHtml(q.file)}</code><br><br>
+        将从目录中<b>永久删除</b>此题库文件，并更新 manifest.json。
+        此操作不可撤销！
+      </p>
+      <div class="actions">
+        <button class="btn btn-muted btn-sm" onclick="this.closest('.del-overlay').remove()">取消</button>
+        <button class="btn btn-danger btn-sm" onclick="doDelete(${index}); this.closest('.del-overlay').remove()">确认删除</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+async function doDelete(index) {
+  const q = state.quizzes[index];
+  if (!q) return;
+
+  if (q.missing) {
+    // 文件已不存在，只从列表中移除
+    state.quizzes.splice(index, 1);
+    state.changed = true;
+    renderTable();
+    showToast(`🗑️ 已移除「${q.name}」的 manifest 记录`, 'success');
+    return;
+  }
+
+  // 从目录中删除文件
+  if (state.dirHandle && state.mode === 'api') {
+    try {
+      await state.dirHandle.removeEntry(q.file);
+    } catch (e) {
+      showToast('❌ 删除文件失败：' + e.message, 'error');
+      return;
+    }
+  }
+
+  state.deletedFiles.push(q.file);
+  state.quizzes.splice(index, 1);
+  state.changed = true;
+  renderTable();
+  showToast(`🗑️ 已删除「${q.name}」`, 'success');
+}
+
+// ===== 保存 =====
+async function saveChanges() {
+  if (!state.changed) {
+    showToast('没有需要保存的修改', 'info');
+    return;
+  }
+
+  if (state.mode === 'fallback') {
+    // 手动模式下：下载 manifest.json
+    downloadManifest();
+    showToast('💾 手动模式下无法写入目录，已为您生成 manifest.json 下载', 'success');
+    state.changed = false;
+    updateSaveButton();
+    return;
+  }
+
+  if (!state.dirHandle) {
+    showToast('❌ 未打开目录，无法保存', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save');
+  btn.innerHTML = '<span class="loading"></span> 保存中…';
+  btn.disabled = true;
+
+  try {
+    // 生成 manifest.json
+    const manifest = state.quizzes
+      .filter(q => q.enabled && !q.missing)
+      .map(q => ({
+        id: q.id,
+        name: q.name,
+        file: q.file,
+        description: q.description || q.name,
+      }));
+
+    // 写入 manifest.json
+    const mfHandle = await state.dirHandle.getFileHandle('manifest.json', { create: true });
+    const mfWritable = await mfHandle.createWritable();
+    await mfWritable.write(JSON.stringify(manifest, null, 2));
+    await mfWritable.close();
+
+    // 同步更新已修改名称的题库 JSON 文件
+    for (const q of state.quizzes) {
+      if (!q.data || q.missing) continue;
+      // 检查是否需要更新：data.name 与原始 name 不同
+      // 注意：q.name 和 q.data.name 在编辑时会同步，所以只要 data 存在且文件存在就写回
+      // 只写入原始 quiz JSON 结构（避免覆盖其他字段）
+      const output = { name: q.name, questions: q.data.questions };
+      const jsonStr = JSON.stringify(output, null, 2);
+      try {
+        const fh = await state.dirHandle.getFileHandle(q.file, { create: false });
+        const fw = await fh.createWritable();
+        await fw.write(jsonStr);
+        await fw.close();
+      } catch (e) {
+        console.warn(`写入 ${q.file} 失败:`, e);
+      }
+    }
+
+    state.changed = false;
+    state.deletedFiles = [];
+    renderTable();
+    showToast(`✅ 保存成功！manifest.json 已更新 (${manifest.length} 个题库)`, 'success');
+  } catch (e) {
+    showToast('❌ 保存失败：' + e.message, 'error');
+  } finally {
+    btn.innerHTML = '💾 保存修改';
+    btn.disabled = false;
+  }
+}
+
+function downloadManifest() {
+  const manifest = state.quizzes
+    .filter(q => q.enabled && !q.missing)
+    .map(q => ({
+      id: q.id,
+      name: q.name,
+      file: q.file,
+      description: q.description || q.name,
+    }));
+
+  const json = JSON.stringify(manifest, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'manifest.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===== 刷新 =====
+async function refreshDirectory() {
+  if (state.dirHandle && state.mode === 'api') {
+    await loadFromDirectory(state.dirHandle);
+    showToast('🔄 已刷新', 'info');
+  } else if (state.mode === 'fallback') {
+    showToast('⚠️ 手动模式下无法刷新，请重新加载文件', 'error');
+  } else {
+    showToast('⚠️ 未打开目录', 'error');
+  }
+}
+
+// ===== 题库名称编辑 =====
+function editQuizName(index) {
+  const q = state.quizzes[index];
+  if (!q || q.missing) {
+    showToast('⚠️ 无法编辑缺失题库的名称', 'error');
+    return;
+  }
+  const newName = prompt('请输入新的题库名称：', q.name);
+  if (!newName || newName.trim() === '' || newName.trim() === q.name) return;
+  q.name = newName.trim();
+  q.description = newName.trim(); // manifest description 同步更新
+  if (q.data) q.data.name = newName.trim(); // 同时更新 JSON 数据中的名称
+  state.changed = true;
+  renderTable();
+  showToast('✏️ 题库名称已更新', 'success');
+}
+
+// ===== 题库预览 =====
+function showPreview(index) {
+  const q = state.quizzes[index];
+  if (!q || !q.data) {
+    showToast('⚠️ 题库数据不可用，无法预览', 'error');
+    return;
+  }
+
+  const overlay = document.getElementById('preview-overlay');
+  const body = document.getElementById('preview-body');
+
+  document.getElementById('preview-title').textContent = `📖 ${q.name}`;
+
+  // 统计
+  const typeEntries = Object.entries(q.types);
+  let statsHtml = typeEntries.map(([k, v]) => {
+    const cls = k === 'single-choice' ? 'single' : k === 'matching' ? 'matching' : 'sentence';
+    const label = { 'single-choice': '单选', 'matching': '消消乐', 'sentence-order': '还原句子' }[k] || k;
+    return `<span class="stat" style="border-left:3px solid var(--c-editor);">${label} ${v}题</span>`;
+  }).join('');
+  statsHtml += `<span class="stat" style="border-left:3px solid var(--c-primary);">共 ${q.questions} 题</span>`;
+
+  // 题目列表
+  const questionsHtml = q.data.questions.map((question, qi) => {
+    const num = qi + 1;
+    let detailHtml = '';
+
+    if (question.type === 'single-choice') {
+      const labels = ['A', 'B', 'C', 'D'];
+      detailHtml = `<div class="q-opts">${
+        (question.options || []).map((opt, oi) => {
+          const isCorrect = oi === question.answer;
+          return `<div class="${isCorrect ? 'correct' : 'wrong'}">${labels[oi]}. ${escapeHtml(opt)} ${isCorrect ? '✓' : ''}</div>`;
+        }).join('')
+      }</div>`;
+    } else if (question.type === 'matching') {
+      const left = question.left || [];
+      const right = question.right || [];
+      const pairs = question.pairs || [];
+      detailHtml = `<div style="padding-left:12px;">${
+        pairs.map(([li, ri], pi) =>
+          `<div class="match-pair"><span>${escapeHtml(left[li] || '')}</span><span class="arrow">↔</span><span>${escapeHtml(right[ri] || '')}</span></div>`
+        ).join('')
+      }</div>`;
+    } else if (question.type === 'sentence-order') {
+      const words = question.words || [];
+      detailHtml = `<div class="sentence-words">${words.map((w, wi) => {
+        const correctIdx = (question.answer || [])[wi];
+        const isMatch = correctIdx === wi;
+        return `<span style="display:inline-block;padding:2px 8px;margin:2px;background:${isMatch ? '#E8F8F4' : '#FFF0F0'};border-radius:4px;font-size:13px;">${escapeHtml(w)}${!isMatch ? ` (→${correctIdx+1})` : ''}</span>`;
+      }).join(' ')}</div>`;
+    }
+
+    const typeLabel = { 'single-choice': '单选', 'matching': '消消乐', 'sentence-order': '还原句子' }[question.type] || '?';
+    const typeCls = question.type === 'single-choice' ? 'single' : question.type === 'matching' ? 'matching' : 'sentence';
+    const explHtml = question.explanation
+      ? `<div class="q-explanation">💡 ${escapeHtml(question.explanation)}</div>` : '';
+
+    return `
+      <div class="preview-question">
+        <div class="q-header">
+          <span class="q-num">#${num}</span>
+          <span class="type-badge ${typeCls}">${typeLabel}</span>
+        </div>
+        <div class="q-text">${escapeHtml(question.question || '(无题目内容)')}</div>
+        ${detailHtml}
+        ${explHtml}
+      </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="preview-stats">${statsHtml}</div>
+    <div class="preview-questions">${questionsHtml}</div>`;
+
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closePreview(event) {
+  if (event && event.target !== event.currentTarget) return;
+  document.getElementById('preview-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ===== 更新 UI =====
+function updateStatus(msg) {
+  const el = document.getElementById('dir-status');
+  el.className = 'dir-status loaded';
+  el.innerHTML = `<span>${msg}</span>`;
+  if (state.mode === 'api') {
+    el.innerHTML += `<span class="mode-badge api">File System API</span>`;
+  } else if (state.mode === 'fallback') {
+    el.innerHTML += `<span class="mode-badge fallback">手动模式</span>`;
+  }
+}
+
+function updateStats() {
+  const total = state.quizzes.length;
+  const enabled = state.quizzes.filter(q => q.enabled).length;
+  const disabled = total - enabled;
+  document.getElementById('stat-total').textContent = `📦 总计：${total}`;
+  document.getElementById('stat-enabled').textContent = `✅ 已启用：${enabled}`;
+  document.getElementById('stat-disabled').textContent = `⏸️ 已禁用：${disabled}`;
+}
+
+function updateSaveButton() {
+  const btn = document.getElementById('btn-save');
+  btn.disabled = !state.changed;
+}
+
+// ===== 忘记 / 自动恢复目录 =====
+async function forgetDirectory() {
+  await clearDirectoryHandle();
+  state.dirHandle = null;
+  state.mode = 'idle';
+  state.quizzes = [];
+  state.changed = false;
+  state.deletedFiles = [];
+  renderTable();
+  document.getElementById('btn-forget').style.display = 'none';
+  const status = document.getElementById('dir-status');
+  status.className = 'dir-status empty';
+  status.innerHTML = `<span>📭</span><span>已清除目录记忆 — 点击「打开目录」重新选择</span>`;
+  showToast('🔒 已清除目录记忆', 'info');
+}
+
+// ===== 自动初始化：尝试恢复上次的目录 =====
+(async function init() {
+  if (!('showDirectoryPicker' in window)) {
+    const status = document.getElementById('dir-status');
+    if (status) status.innerHTML = `<span>⚠️</span><span>当前浏览器不支持目录 API，请使用「手动加载」模式</span>`;
+    return;
+  }
+  try {
+    const handle = await loadDirectoryHandle();
+    if (!handle) {
+      // 首次使用：在状态栏提示默认路径
+      const status = document.getElementById('dir-status');
+      if (status) {
+        status.innerHTML = `<span>📂</span><span>首次使用 — 点击「打开目录」选择项目中的 <code>public/quizzes/</code> 文件夹</span>`;
+      }
+      return;
+    }
+    // 尝试恢复权限
+    let perm = await handle.queryPermission({ mode: 'readwrite' });
+    if (perm !== 'granted') {
+      showToast('🔑 需要授权才能自动恢复目录', 'info');
+      perm = await handle.requestPermission({ mode: 'readwrite' });
+    }
+    if (perm !== 'granted') {
+      // 用户拒绝了权限 — 清除记忆，提示手动选择
+      await clearDirectoryHandle();
+      const status = document.getElementById('dir-status');
+      if (status) {
+        status.innerHTML = `<span>🔒</span><span>目录权限被拒绝，请点击「打开目录」重新选择</span>`;
+      }
+      showToast('🔒 目录权限被拒绝，请重新选择', 'error');
+      return;
+    }
+    state.dirHandle = handle;
+    state.mode = 'api';
+    await loadFromDirectory(handle);
+    const status = document.getElementById('dir-status');
+    if (status) {
+      status.innerHTML = `<span>📂 已自动恢复上次打开的目录</span>`;
+    }
+    document.getElementById('btn-forget').style.display = '';
+    showToast('📂 已自动恢复上次的题库目录', 'success');
+  } catch (e) {
+    console.warn('自动恢复目录失败:', e);
+    await clearDirectoryHandle().catch(() => {});
+    const status = document.getElementById('dir-status');
+    if (status) {
+      status.innerHTML = `<span>⚠️</span><span>自动恢复失败（${e.message}），请点击「打开目录」重新选择</span>`;
+    }
+  }
+})();
+</script>
+</body>
+</html>

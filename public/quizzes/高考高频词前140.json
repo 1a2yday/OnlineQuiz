@@ -1,0 +1,1230 @@
+{
+  "name": "高考高频词前140",
+  "questions": [
+    {
+      "id": "q_mrg48b5r_c2t3bl",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "author",
+        "paragraph",
+        "according to",
+        "public"
+      ],
+      "right": [
+        "n. 作者，作家",
+        "n. （文章的）段落",
+        "(短语)  按照，根据",
+        "adj.公共公众的 n. 公众"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_oc8u82",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "design",
+        "researcher",
+        "underlined",
+        "likely"
+      ],
+      "right": [
+        "n.& vt. 设计; n.图案，图样，样式",
+        "n. 研究员；调查者",
+        "adj. 加下划线的",
+        "adv.很可能 adj.很可能的"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_mu1qok",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "section",
+        "effort",
+        "focus",
+        "mainly"
+      ],
+      "right": [
+        "n. 段，部分，部门",
+        "n. 努力，艰难的尝试",
+        "v. & n.集中（注意力，精力）于，焦点",
+        "adv.主要地；大体上"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_a7l1yr",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "title",
+        "quickly",
+        "energy",
+        "million"
+      ],
+      "right": [
+        "n. 标题，题目",
+        "adv.很快地；迅速地",
+        "n.能量，能源",
+        "num. 百万 n. 百万个（人或物）"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_h1encl",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "benefit",
+        "event",
+        "painting",
+        "reduce"
+      ],
+      "right": [
+        "n. .益处； v. 使…受益",
+        "n. 事件，大事;（体育）比赛项目; 公开活动",
+        "n. 油画，水彩画",
+        "vt. 减少，缩减"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_htdbkj",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "behavior",
+        "base",
+        "actually",
+        "performance"
+      ],
+      "right": [
+        "n. 行为，举止",
+        "n. 基础，基地; (棒球)垒   vt.以…作基础",
+        "adv.事实上； 实际上",
+        "n. 演出，表演，表现"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_cvtgnc",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "professor",
+        "type",
+        "experiment",
+        "attitude"
+      ],
+      "right": [
+        "n. 教授",
+        "n.类型  vt. 打字",
+        "n. 实验",
+        "n. 态度，看法"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_8uv0id",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "within",
+        "reward",
+        "data",
+        "refer"
+      ],
+      "right": [
+        "prep. 在……里面; 在…之内",
+        "v& n. 奖赏；回报； n. 报酬",
+        "n. 数据；资料",
+        "vi. 谈到；提到；涉及；有关"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_z4ues5",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "case",
+        "concerned",
+        "perform",
+        "earn"
+      ],
+      "right": [
+        "n. 情况；病例；案件；真相  n. 箱；盒；",
+        "adj．担心的；关切的",
+        "v. 表演，履行；表现",
+        "vt. 挣得，赚得"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_owq1uw",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "opportunity",
+        "system",
+        "quality",
+        "process"
+      ],
+      "right": [
+        "n.机会;时机",
+        "n. 体系；系统",
+        "n. 质量；品质，品德（多复数）",
+        "n.& v. 过程；加工；处理"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_hmnq52",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "inspire",
+        "positive",
+        "engineering",
+        "suffer"
+      ],
+      "right": [
+        "vt. 鼓舞； 激励",
+        "adj.积极乐观的",
+        "n.工程（学）;工程师行业",
+        "vi. 受苦，遭受"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_jy03dj",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "apply",
+        "infer",
+        "tend",
+        "expert"
+      ],
+      "right": [
+        "v. 申请; 应用； 涂（药）",
+        "vt.推断；推定",
+        "v. 往往会，常常就，倾向，趋于",
+        "n. 专家，能手"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_yz5x5v",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "opinion",
+        "prove",
+        "blank",
+        "explore"
+      ],
+      "right": [
+        "n. 观点；看法，见解",
+        "vt. 证明",
+        "n.& adj. 空格，空白；空的；茫然无表情的",
+        "v. 探险；探索; 探讨"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_t0vyhk",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "promote",
+        "desire",
+        "amount",
+        "anger"
+      ],
+      "right": [
+        "v.促进；推动；促销；晋升",
+        "vt&n.渴望；  n.期望；欲望",
+        "n. & v. 数量，金额，总计",
+        "n. 愤怒；怒火"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_tff762",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "apartment",
+        "attract",
+        "approach",
+        "average"
+      ],
+      "right": [
+        "n. （美）公寓，套房",
+        "v. 吸引，引起",
+        "n. & v.接近    n.方法；途径",
+        "adj.平均；普通的 n.平均数"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_hw02mp",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "individual",
+        "involve",
+        "recognize",
+        "spot"
+      ],
+      "right": [
+        "n.个人  adj. 个人的",
+        "vi.涉及；包含；需要；（使）参加",
+        "vt.认出; 认可； 承认",
+        "n. 斑点; 场所，地点 v. 发现；看出"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_x85w49",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "affect",
+        "track",
+        "replace",
+        "schedule"
+      ],
+      "right": [
+        "vt. 影响；(疾病)侵袭；深深打动",
+        "n. 轨道；田径  v.追踪",
+        "vt. 取代",
+        "n. 工作计划，日程安排v. 安排时间，预定"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_rm2xjm",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "species",
+        "amazed",
+        "demand",
+        "lack"
+      ],
+      "right": [
+        "n.物种 (单复数同形)",
+        "adj.感到惊奇的；惊喜的",
+        "vt. 要求",
+        "n.& vt. 缺乏，缺少"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_t9f1lr",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "material",
+        "per",
+        "responsibility",
+        "seek"
+      ],
+      "right": [
+        "n. 材料，原料",
+        "prep. 每，每一",
+        "n. 责任，负责",
+        "vt. 寻找;寻求;争取"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_7ywqm9",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "strength",
+        "damage",
+        "decline",
+        "respect"
+      ],
+      "right": [
+        "n. 力量，力气; 优点；强项",
+        "n.& vt. 毁坏，损害",
+        "v. 减少；下降；衰退；谢绝",
+        "vt.& n. 尊敬，尊重"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_ikvslz",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "towards",
+        "recommend",
+        "childhood",
+        "gain"
+      ],
+      "right": [
+        "adv.朝，向，对着",
+        "v. 推荐；建议",
+        "n. 幼年时代，童年",
+        "vt. 赢得；挣得"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_e9t983",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "ignore",
+        "major",
+        "range",
+        "beyond"
+      ],
+      "right": [
+        "v. 忽视，对…不理会",
+        "adj. 较大的；主要的  n.(主修)专业",
+        "v. 变化，变动，n.范围; 一系列 a ~of",
+        "prep. (表示位置) 在…的那边；超出"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_hyn2jc",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "character",
+        "conduct",
+        "extra",
+        "generally"
+      ],
+      "right": [
+        "n. 角色；（汉）字；品格",
+        "vt. 进行；引导，带领  n.行为",
+        "adj. 额外的，外加的",
+        "adv.一般地；通常；普遍地"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_01oh2q",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "physical",
+        "prefer",
+        "program",
+        "adventure"
+      ],
+      "right": [
+        "adj. 身体的；物理的",
+        "vt.宁愿（选择）；更喜欢",
+        "n. 节目；项目；电脑程序",
+        "n. 冒险； 奇遇"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_cc061n",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "center",
+        "confidence",
+        "figure",
+        "flight"
+      ],
+      "right": [
+        "n.中心点，中心",
+        "n.信心; 自信",
+        "n.数字；图形；身材；人物；人物像 vt.认为",
+        "n. 航班；飞行"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_0d13ba",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "media",
+        "observe",
+        "participant",
+        "audience"
+      ],
+      "right": [
+        "n. 大众传播媒介；媒体",
+        "v. 观察，监视，观测",
+        "n.参与者；参加者",
+        "n. 观众，听众"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_8lifi4",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "cultural",
+        "freedom",
+        "host",
+        "limit"
+      ],
+      "right": [
+        "adj.文化的",
+        "n. 自由",
+        "n. 主人；节目主持人 v. 主办；主持",
+        "vt. 限制；减少   n.限制"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_e21pz5",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "puzzle",
+        "aim",
+        "digital",
+        "extremely"
+      ],
+      "right": [
+        "n．谜；智力游戏；疑问; vt．迷惑；使困惑",
+        "n.目的；目标 v. 计划，打算；瞄准；针对",
+        "adj. 数字的，数码的",
+        "adv. 极其，非常"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_1ggljs",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "intend",
+        "pressure",
+        "pull",
+        "relate"
+      ],
+      "right": [
+        "vt. 想要，打算，计划",
+        "n. 压力；压强",
+        "v.拉，拖 n. 拉力，引力",
+        "vi. 有关； 涉及 ; 联系"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_e1df3a",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "united",
+        "advance",
+        "contain",
+        "contribute"
+      ],
+      "right": [
+        "adj.团结的；统一的",
+        "v. 推进，促进；前进  n. 进步",
+        "v. 包含；包括；能容纳",
+        "v. 贡献; 捐助；促成"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_mikozx",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "device",
+        "global",
+        "hire",
+        "organize"
+      ],
+      "right": [
+        "n.装置；仪器;方法；技巧；",
+        "adj.全球的；全世界的",
+        "vt.雇用；租用",
+        "v. 组织；筹备； 安排；"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_dq2yqo",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "remove",
+        "variety",
+        "creative",
+        "effective"
+      ],
+      "right": [
+        "vt. 移动，拿走，脱掉（衣服等）",
+        "n. 种类；多样化",
+        "adj.创造性的;有创造力的;有创意的",
+        "adj．有效的；生效的"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_gxaors",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "failure",
+        "generation",
+        "lecture",
+        "publish"
+      ],
+      "right": [
+        "n. 失败; 故障",
+        "n. 代，一代人",
+        "n. 讲课，演讲",
+        "v. 出版，发行"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_95465a",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "theater",
+        "admit",
+        "collection",
+        "crowd"
+      ],
+      "right": [
+        "n. 剧场，戏院",
+        "vt. 承认，准许（入场，入学，入会）",
+        "n. 收藏品，收集物",
+        "n. 人群 vt. 拥挤，群聚"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrg48b5r_we4h4q",
+      "type": "matching",
+      "question": "请匹配英文与中文释义",
+      "left": [
+        "measure",
+        "organization",
+        "request",
+        "appreciate"
+      ],
+      "right": [
+        "v. 衡量；测量; 量度为...       n. 措施",
+        "n. 组织，机构",
+        "v&n. 要求；请求",
+        "v. 欣赏； 感激"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    }
+  ]
+}

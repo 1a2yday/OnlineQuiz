@@ -402,7 +402,7 @@ body { font-family: -apple-system, 'Noto Sans SC', sans-serif; background:var(--
         <h2 id="preview-title">📖 题库预览</h2>
         <button class="close-btn" onclick="closePreview(event)">✕</button>
       </div>
-      <div class="preview-body" id="preview-body">
+      <div class="preview-body" id="preview-content">
         <div class="preview-empty"><div class="icon" style="font-size:40px;">📭</div><p>题库为空，无法预览</p></div>
       </div>
     </div>
@@ -1427,7 +1427,7 @@ function showPreview() {
   }
 
   const overlay = document.getElementById('preview-overlay');
-  const body = document.getElementById('preview-body');
+  const body = document.getElementById('preview-content');
 
   document.getElementById('preview-title').textContent = `📖 ${quizState.name || '未命名题库'}`;
 
