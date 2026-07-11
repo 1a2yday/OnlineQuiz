@@ -1,14 +1,20 @@
 [
   {
-  "id": "PHRASETEST",
-  "name": "B2U3-B3U4短语速测",
-  "file": "PHRASETEST.json",
-  "description": "B2U3-B3U4短语速测"
-},
-{
-  "id": "B2U3-B3U4GRAMMAR",
-  "name": "B2U3-B3U4语法速测",
-  "file": "B2U3-B3U4GRAMMAR.json",
-  "description": "B2U3-B3U4语法速测"
-}
+    "id": "B2U3B3U5语法速测",
+    "name": "B2U3-B3U5【语法】速测",
+    "file": "B2U3-B3U5GRAMMAR.json",
+    "description": "B2U3-B3U5【语法】速测"
+  },
+  {
+    "id": "PHRASETEST",
+    "name": "B2U3-B3U5【短语】速测",
+    "file": "PHRASETEST.json",
+    "description": "B2U3-B3U5【短语】速测"
+  },
+  {
+    "id": "高考高频词前140",
+    "name": "高考高频词前140",
+    "file": "高考高频词前140.json",
+    "description": "高考高频词TOP140"
+  }
 ]

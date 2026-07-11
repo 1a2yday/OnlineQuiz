@@ -1,5 +1,5 @@
 {
-  "name": "短语速测",
+  "name": "B2U3-B3U5【短语】速测",
   "questions": [
     {
       "id": "q_mqg4037o_prvktj",
@@ -904,7 +904,7 @@
     {
       "id": "q_mqg4037p_sjcf1r",
       "type": "matching",
-      "question": "不限顺序配对短语：\n①重视\n②供养某人\n③用完...\n④最后",
+      "question": "不限顺序配对短语：\n①重视\n②供养某人\n③用完/耗尽...\n④最后",
       "left": [
         "attach improtance",
         "provide",
@@ -935,7 +935,259 @@
           3
         ]
       ],
-      "explanation": "①重视 attach importance to ...\n②供养某人 provide for sb\n③用完... run out of ...\n④最后 in closing"
+      "explanation": "①重视 attach importance to ...\n②供养某人 provide for sb\n③用完/耗尽... run out of ...\n④最后 in closing"
+    },
+    {
+      "id": "q_mrfv57bx_5nwplh",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①在...的基础上\n②因某事而道歉\n③取得贷款\n④做为回报；作为回应",
+      "explanation": "不限顺序配对短语：\n①在...的基础上 on the basis of ...\n②因某事而道歉 apoligise for sth\n③取得贷款 take out a loan\n④做为回报；作为回应 in return",
+      "left": [
+        "on the",
+        "apologise\t \t",
+        "take out",
+        "in"
+      ],
+      "right": [
+        "baisis of",
+        "for sth",
+        "a loan",
+        "return"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfv8fnu_xq231o",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①以貌取人; 以外貌评判一个人\n②打赌\n③事实上；其实\n④敢于做某事",
+      "explanation": "不限顺序配对短语：\n①以貌取人; 以外貌评判一个人judge sb by his/her appreance\n②打赌make a bet\n③事实上；其实as a matter of fact\n④敢于做某事dare to do sth",
+      "left": [
+        "judge sb",
+        "make",
+        "as a matter",
+        "dare"
+      ],
+      "right": [
+        "by his/her appreance",
+        "a bet",
+        "of fact",
+        "to do sth"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfvdx42_fzb6ou",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①整理；解决 \n②发现某人正在做某事\n③耐心地\n④刚要做某事",
+      "explanation": "不限顺序配对短语：\n①整理；解决 sort out\n②发现某人正在做某事spot sb doing sth\n③耐心地with patience\n④刚要做某事be about to do sth",
+      "left": [
+        "sort",
+        "spot sb doing sth",
+        "with",
+        "be about"
+      ],
+      "right": [
+        "out",
+        "doing sth",
+        "patience",
+        "to do sth"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfvjbon_i72iyi",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①推迟做某事\n②在某种程度上\n③到处都看不见\n④京剧",
+      "explanation": "不限顺序配对短语：\n①推迟做某事postpone doing sth\n②在某种程度上to some extent\n③到处都看不见be nowhere to be seen\n④京剧Peking Opera",
+      "left": [
+        "postpone",
+        "to some",
+        "be nowhere",
+        "Peking"
+      ],
+      "right": [
+        "doing sth",
+        "extent",
+        "to be seen",
+        "Opera"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfvlzvd_iumtvd",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①值日；值班\n②紧紧抱住某人\n③犹豫做某事\n④追求目标",
+      "explanation": "不限顺序配对短语：\n①值日；值班on duty\n②紧紧抱住某人hug sb. firmly\n③犹豫做某事hesitate to do sth\n④追求目标pursue a goal",
+      "left": [
+        "on",
+        "hug sb.",
+        "hesitate",
+        "pursue"
+      ],
+      "right": [
+        "duty",
+        "firmly",
+        "to do sth",
+        "a goal"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfvr9k6_2p8mbj",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①毫不犹豫地\n②以一种...的方式\n③既然那样; 在那种情况下\n④灿烂的微笑",
+      "explanation": "不限顺序配对短语：\n①毫不犹豫地without hesitation\n②以一种...的方式 in a ... manner\n③既然那样；在那种情况下 in that case\n④灿烂的微笑 a broad smile",
+      "left": [
+        "without",
+        "in a ...",
+        "in that ",
+        "a broad"
+      ],
+      "right": [
+        "hesitation",
+        "manner",
+        "case",
+        "smile"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
+    },
+    {
+      "id": "q_mrfwps5q_oko2gv",
+      "type": "matching",
+      "question": "不限顺序配对短语：\n①愿意/乐意做某事\n②餐桌礼仪\n③维持健康\n④未经允许",
+      "explanation": "不限顺序配对短语：\n①愿意/乐意做某事 be willing to do sth\n②餐桌礼仪table manners\n③维持健康maintain healthy\n④未经允许without permission",
+      "left": [
+        "be willing ",
+        "table",
+        "maintain",
+        "without"
+      ],
+      "right": [
+        "to do sth",
+        "manners",
+        "healthy",
+        "permission"
+      ],
+      "pairs": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          3
+        ]
+      ]
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "B2U3-B3U4语法速测",
+  "name": "B2U3-B3U5【语法】速测",
   "questions": [
     {
       "id": "q_mqgg67km_m4thha",
@@ -103,7 +103,7 @@
         "Having faced"
       ],
       "answer": 2,
-      "explanation":"主语he和动词face为主动关系，因此用现在分词作状语表主动。面对困难时，他从不灰心。"
+      "explanation": "主语he和动词face为主动关系，因此用现在分词作状语表主动。面对困难时，他从不灰心。"
     },
     {
       "id": "q_mqgg67km_ftp1ou",
@@ -129,7 +129,8 @@
         "were used to have"
       ],
       "answer": 0,
-      "explanation": "used to do 表示「过去常常/曾经...」，be used to doing习惯做某事；be used to do被用来做。there be句型不能用have代替be，这里过去曾有许多书，但现在它已经成为了沙漠。"},
+      "explanation": "used to do 表示「过去常常/曾经...」，be used to doing习惯做某事；be used to do被用来做。there be句型不能用have代替be，这里过去曾有许多书，但现在它已经成为了沙漠。"
+    },
     {
       "id": "q_mqgg67km_u08x2r",
       "type": "single-choice",
@@ -365,6 +366,45 @@
       "explanation": "with + n. + to do 表示「有...要解决」，不定式充当宾补，表示未发生动作。有这么多问题要解决，总统一夜无眠。"
     },
     {
+      "id": "q_mqgg67km_kd21jy",
+      "type": "single-choice",
+      "question": "He is likely ______ late because of the traffic.",
+      "options": [
+        "be",
+        "being",
+        "to be",
+        "been"
+      ],
+      "answer": 2,
+      "explanation": "be likely to do 是固定搭配。"
+    },
+    {
+      "id": "q_mrez3q5z_s316k2",
+      "type": "single-choice",
+      "question": "当宾语从句的谓语动词有“建议/命令/请求/愿望”等含义时，谓语要用虚拟语气，即情态动词___________+从句谓语。",
+      "explanation": "Eg. I strongly recommend that you (should) wear a coat. 我强烈建议你穿个外套。 这一类虚拟语气的特点是情态动词should +从句谓语",
+      "options": [
+        "can",
+        "will",
+        "should",
+        "ought to"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q_mrez7pvp_1yx3zj",
+      "type": "single-choice",
+      "question": "The boss ordered that all the job __________  as soon as possible.",
+      "explanation": "当宾语从句的谓语动词有“建议/命令/请求/愿望”等含义时，谓语要用虚拟语气，即情态动词should+从句谓语, 注意这时should是可省略的，但依旧要接动词原形。此处order为命令的意思，因此其后的宾语从句要虚拟；工作和完成之间是被动关系，要用被动语态be done，因此只有C选项 (should) be done 成立，因为should可省略。",
+      "options": [
+        "be done",
+        "would be done",
+        "were done",
+        "would do"
+      ],
+      "answer": 0
+    },
+    {
       "id": "q_mqgg67km_kfp80d",
       "type": "single-choice",
       "question": "It's dangerous ______ the internet without any protection.",
@@ -378,17 +418,65 @@
       "explanation": "It's adj. + to do 结构，做某事是怎么样的。没有任何保护的情况下使用因特网是非常危险的"
     },
     {
-      "id": "q_mqgg67km_kd21jy",
-      "type": "single-choice",
-      "question": "He is likely ______ late because of the traffic.",
-      "options": [
-        "be",
-        "being",
-        "to be",
-        "been"
+      "id": "q_mrf00aq7_bmjqjc",
+      "type": "sentence-order",
+      "question": "根据中文翻译把以下句子按正确顺序排列: 他要求这些花要被定期浇水。",
+      "explanation": " 他要求这些花要被定期浇水。He  required that the flowers  should be watered regularly. （宾语从句的虚拟语气）",
+      "words": [
+        "He",
+        "required",
+        "that",
+        "the flowers",
+        "should",
+        "be watered regularly."
       ],
-      "answer": 2,
-      "explanation": "be likely to do 是固定搭配。"
+      "answer": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "q_mrf6okfs_4h00gl",
+      "type": "single-choice",
+      "question": "She said that she _________  me a call after she arrived.",
+      "explanation": "根据宾语从句时态“主过从也过”原则，从句要用过去相关时态，根据句意“她说在她到达之后将会给我打电话”应该是过去将来时，因此用would，D违反了情态动词＋原形的特性，只能选C。",
+      "options": [
+        "gives",
+        "will give",
+        "would give",
+        "would gives"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q_mrftfkkk_97endt",
+      "type": "single-choice",
+      "question": "Could you please give me a hand? 一句中could的作用是?",
+      "explanation": "",
+      "options": [
+        "表示过去时态",
+        "表示义务",
+        "表示委婉",
+        "表示"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "q_mrfush2u_uitkxp",
+      "type": "single-choice",
+      "question": "-May I take the book home？\n-No, you  _________. You can only read the book in the library.",
+      "explanation": "mustn't表示“禁止；不准”，语气最强硬，多用于法律规定等场景。",
+      "options": [
+        "shouldn't",
+        "needn't",
+        "mustn't",
+        "may not"
+      ],
+      "answer": 2
     }
   ]
 }
